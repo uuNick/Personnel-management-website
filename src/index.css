@@ -5,9 +5,29 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 62.5%;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+:root {
+  --bg-color-section: black;
+  --bg-color-section-2: #FAFAFA;
+  --bg-comments-color: #DADADA;
+  --bg-color: #FFF;
+  --svg-logo-text-color: #121212;
+  --text-color: #121212; /*Ready*/
+  --text-red-color: #FF5634;
+  --text-gray-color: #656565;
+  --white-color: #FFF;
+  --horisontal-line: #CACACA;
+}
+
+main {
+  margin: 0 auto;
+  -webkit-box-flex: 1;
+  max-width: 122.2em;
 }
