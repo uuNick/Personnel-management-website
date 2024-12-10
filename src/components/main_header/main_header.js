@@ -2,11 +2,9 @@ import React from 'react';
 import Logo from '../../images/logo/logo.png';
 import './Main_Header.css';
 import Button from '@mui/material/Button';
-// import { useTranslation } from 'react-i18next';
 
 const Main_Header = () => {
 
-    // const { t } = useTranslation();
 
     return (
         <header>
@@ -30,9 +28,9 @@ const Main_Header = () => {
                             </li>
                         </ul>
                     </nav>
-                    <div className="header_buttons">
+                    {/* <div className="header_buttons">
                         <Button variant="outlined" color='primary.contrastText'>Войти</Button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </header>
