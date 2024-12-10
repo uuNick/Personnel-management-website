@@ -2,13 +2,21 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Main from "./pages/Main";
 import NotFound404 from "./pages/NotFound404";
+import Login from "./pages/Authorization/Login";
+import Registration from "./pages/Authorization/Registration";
+import ResetPage from "./pages/Authorization/ResetPage";
+import ResetPassword from "./pages/Authorization/ResetPassword";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          {/* <Route path="/" element={<Login />} /> */}
+          <Route path="/" element={<Login />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/reset" element={<ResetPage />} />
+          <Route path="/resetPassword" element={<ResetPassword />} />
           <Route path="*" element={<NotFound404 />} />
         </Routes>
       </BrowserRouter>

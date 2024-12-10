@@ -1,0 +1,5 @@
+.all_device_div{
+    background-color: var(--bg-color-section-2);
+    height: 100vh;
+    text-align: center;
+}
