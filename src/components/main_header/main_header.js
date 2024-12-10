@@ -1,10 +1,10 @@
 import React from 'react';
 import Logo from '../../images/logo/logo.png';
-import './main_header.css';
+import './Main_Header.css';
 import Button from '@mui/material/Button';
 // import { useTranslation } from 'react-i18next';
 
-const main_header = () => {
+const Main_Header = () => {
 
     // const { t } = useTranslation();
 
@@ -39,4 +39,4 @@ const main_header = () => {
     );
 };
 
-export default main_header;
+export default Main_Header;

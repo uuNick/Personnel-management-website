@@ -1,11 +1,17 @@
 import React from "react";
-import Main from "./pages/main";
-
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Main from "./pages/Main";
+import NotFound404 from "./pages/NotFound404";
 
 function App() {
   return (
     <>
-      <Main></Main>
+      <BrowserRouter>
+        <Routes>
+          {/* <Route path="/" element={<Login />} /> */}
+          <Route path="*" element={<NotFound404 />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

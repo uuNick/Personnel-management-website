@@ -1,8 +1,8 @@
 import React from 'react';
-import Header from "../components/main_header/main_header";
+import Header from "../components/Main_Header/Main_Header";
 
 
-const main = () => {
+const Main = () => {
     return (
         <>
             <Header/>
@@ -10,4 +10,4 @@ const main = () => {
     );
 }
 
-export default main;
+export default Main;
