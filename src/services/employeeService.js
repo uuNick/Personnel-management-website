@@ -21,6 +21,25 @@ class employeeService {
             }
         }
     }
+
+    async getPartEmployees(page, limit) {
+        try {
+            const response = await axios.get(`${hostServer}employees/pag?page=${page}&limit=${limit}`);
+            if (response.status === 200) {
+                return response;
+            } else {
+                throw new Error(`Ошибка при получении работников: ${response.data.message || 'Неизвестная ошибка'}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при получении работников: ${error}`);
+            }
+        }
+    }
 }
 
 export default new employeeService();

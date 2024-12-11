@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllEmployees, setSortBy  } from '../../actions/employeeAction';
+import { getAllEmployees, setSortBy, getPartEmployess } from '../../actions/employeeAction';
 import './Employee_Cards.css';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
@@ -29,16 +29,16 @@ import {
   Divider
 } from '@mui/material';
 import noPhoto from '../../images/no_photo.jpg';
-//import Numeration from '../../Numeration/Numeration';
+import Numeration from '../Numeration/Numeration';
 
 
 
 const Employee_Cards = () => {
   const dispatch = useDispatch();
-  const { employees, sortedEmployees, sortBy, loading, error } = useSelector(state => state.employee);
+  const { employees, part_employees, currentPage, totalPages, limit, loading, error } = useSelector(state => state.employee);
   const [open, setOpen] = useState(false);
   //const [buyerToDelete, setbuyerToDelete] = useState(null);
-  // const [sortBy, setSortBy] = useState(null);
+  const [sortBy, setSortBy] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [inputSearch, setInputSearch] = useState('');
 
@@ -46,53 +46,54 @@ const Employee_Cards = () => {
     setInputSearch(event.target.value);
   };
 
-    const handleSearchSubmit = () => {
-      console.log(inputSearch);
-      setSearchQuery(inputSearch);
-      // if (searchQuery.trim() !== '') {
-      //   dispatch(searchBuyers(searchQuery, currentPage, limit));
-      // } else {
-      //   dispatch(fetchBuyer(currentPage, limit));
-      // }
-    };
+  const handleSearchSubmit = () => {
+    console.log(inputSearch);
+    setSearchQuery(inputSearch);
+    // if (searchQuery.trim() !== '') {
+    //   dispatch(searchBuyers(searchQuery, currentPage, limit));
+    // } else {
+    //   dispatch(getPartEmployess(currentPage, limit));
+    // }
+  };
 
-    const handleClearSearch = () => {
-      setSearchQuery('');
-      setInputSearch('');
-      // dispatch(fetchBuyer(currentPage, limit));
-    };
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setInputSearch('');
+    dispatch(getPartEmployess(currentPage, limit));
+  };
 
-    const handleSortByChange = (event) => {
-      dispatch(setSortBy(event.target.value));
-    };
+  //Сортировка по данным в Redux
+  // const handleSortByChange = (event) => {
+  //   dispatch(setSortBy(event.target.value));
+  // };
 
   useEffect(() => {
-    dispatch(getAllEmployees());
-  }, [dispatch]);
+    dispatch(getPartEmployess(currentPage, limit));
+  }, [dispatch, currentPage, limit]);
 
-  //   useEffect(() => {
-  //     if (searchQuery) {
-  //       dispatch(searchBuyers(searchQuery, currentPage, limit));
-  //     } else if (sortBy) {
-  //       dispatch(sortBuyers(currentPage, limit, sortBy));
-  //     } else {
-  //       dispatch(fetchBuyer(currentPage, limit));
-  //     }
-  //   }, [searchQuery, sortBy, dispatch, currentPage, limit]);
+  // useEffect(() => {
+  //   if (searchQuery) {
+  //     dispatch(searchBuyers(searchQuery, currentPage, limit));
+  //   } else if (sortBy) {
+  //     dispatch(sortBuyers(currentPage, limit, sortBy));
+  //   } else {
+  //     dispatch(getPartEmployess(currentPage, limit));
+  //   }
+  // }, [searchQuery, sortBy, dispatch, currentPage, limit]);
 
   //   const buyersToDisplay = searchQuery.trim() !== '' ? findBuyer : (sortBy ? sortedBuyer : buyer);
 
-  //   const handlePageChange = (page) => {
-  //     console.log(buyersToDisplay);
-  //     if (searchQuery.trim() !== '') {
-  //       dispatch(searchBuyers(searchQuery, page, limit));
-  //     }
-  //     else if (sortBy) {
-  //       dispatch(sortBuyers(page, limit, sortBy));
-  //     } else {
-  //       dispatch(fetchBuyer(page, limit));
-  //     }
-  //   };
+  const handlePageChange = (page) => {
+    // if (searchQuery.trim() !== '') {
+    //   dispatch(searchBuyers(searchQuery, page, limit));
+    // }
+    // else if (sortBy) {
+    //   dispatch(sortBuyers(page, limit, sortBy));
+    // } else {
+    //   dispatch(fetchBuyer(page, limit));
+    // }
+    dispatch(getPartEmployess(page, limit));
+  };
 
 
   //   const navigate = useNavigate()
@@ -153,7 +154,7 @@ const Employee_Cards = () => {
             <RadioGroup
               value={sortBy || ''}
               name="sort"
-              onChange={handleSortByChange}
+              //onChange={handleSortByChange}
             >
               <FormControlLabel value="name" control={<Radio />} label="По имени" />
               <FormControlLabel value="start_date" control={<Radio />} label="По дате приема на работу" />
@@ -164,7 +165,7 @@ const Employee_Cards = () => {
         </div>
         <div className='field_with_card_and_numeration'>
           <div className="cards">
-            {employees.map(item => (
+            {part_employees.map(item => (
               <Card key={item.id} sx={{ width: 345 }}>
                 <CardHeader
                   title={item.fullname}
@@ -190,8 +191,8 @@ const Employee_Cards = () => {
               </Card>
             ))}
           </div>
-          {/* <Numeration totalPages={totalPages} currentPage={currentPage} handlePageChange={handlePageChange} />
-          <Button onClick={goToAddBuyer} color='primary.contrastText' sx={{ marginBottom: "50px" }}>Добавить покупателя</Button>
+          <Numeration totalPages={totalPages} currentPage={currentPage} handlePageChange={handlePageChange} />
+          {/* <Button onClick={goToAddBuyer} color='primary.contrastText' sx={{ marginBottom: "50px" }}>Добавить покупателя</Button>
           <Dialog open={open} onClose={handleDeleteClose}>
             <DialogTitle>Подтверждение удаления</DialogTitle>
             <DialogContent>

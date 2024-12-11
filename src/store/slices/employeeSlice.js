@@ -1,22 +1,31 @@
 import {
   FETCH_EMPLOYEE,
   FETCH_EMPLOYEE_SUCCESS,
+  FETCH_PART_EMPLOYEE_SUCCESS,
   FETCH_EMPLOYEE_FAILURE,
   SET_SORT_BY,
 } from '../../actionTypes';
 
 const initialState = {
-  loading: false,
   employees: [],
+  part_employees: [],
   originalEmployees: [],
-  error: null,
+  total: 0,
+  currentPage: 1,
+  totalPages: 0,
+  limit: 10,
   sortBy: null,
+  loading: false,
+  error: null,
 };
 
 const employeeSlice = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_EMPLOYEE:
       return { ...state, loading: true, error: null };
+
+    case FETCH_PART_EMPLOYEE_SUCCESS:
+      return handlePagination(state, action.payload, 'part_employees');
 
     case FETCH_EMPLOYEE_SUCCESS:
       return { ...state, loading: false, employees: action.payload, originalEmployees: [...action.payload], error: null };
@@ -42,5 +51,15 @@ const employeeSlice = (state = initialState, action) => {
       return state;
   }
 };
+
+const handlePagination = (state, payload, dataKey) => ({
+  ...state,
+  [dataKey]: payload.data,
+  total: payload.total,
+  currentPage: payload.currentPage,
+  totalPages: payload.pages,
+  loading: false,
+  error: null,
+});
 
 export default employeeSlice;
