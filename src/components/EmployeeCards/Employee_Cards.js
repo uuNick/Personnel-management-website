@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllEmployees } from '../../actions/employeeAction';
+import { getAllEmployees, setSortBy  } from '../../actions/employeeAction';
 import './Employee_Cards.css';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
@@ -35,42 +35,36 @@ import noPhoto from '../../images/no_photo.jpg';
 
 const Employee_Cards = () => {
   const dispatch = useDispatch();
-  const { employees, loading, error } = useSelector(state => state.employee);
+  const { employees, sortedEmployees, sortBy, loading, error } = useSelector(state => state.employee);
   const [open, setOpen] = useState(false);
   //const [buyerToDelete, setbuyerToDelete] = useState(null);
-  //const [sortBy, setSortBy] = useState(null);
-  //const [searchQuery, setSearchQuery] = useState('');
+  // const [sortBy, setSortBy] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [inputSearch, setInputSearch] = useState('');
 
   const handleSearchChange = (event) => {
     setInputSearch(event.target.value);
   };
 
-  //   const handleSearchSubmit = () => {
-  //     console.log(inputSearch);
-  //     setSearchQuery(inputSearch);
-  //     if (searchQuery.trim() !== '') {
-  //       dispatch(searchBuyers(searchQuery, currentPage, limit));
-  //     } else {
-  //       dispatch(fetchBuyer(currentPage, limit));
-  //     }
-  //   };
+    const handleSearchSubmit = () => {
+      console.log(inputSearch);
+      setSearchQuery(inputSearch);
+      // if (searchQuery.trim() !== '') {
+      //   dispatch(searchBuyers(searchQuery, currentPage, limit));
+      // } else {
+      //   dispatch(fetchBuyer(currentPage, limit));
+      // }
+    };
 
-  //   const handleClearSearch = () => {
-  //     setSearchQuery('');
-  //     setInputSearch('');
-  //     dispatch(fetchBuyer(currentPage, limit));
-  //   };
+    const handleClearSearch = () => {
+      setSearchQuery('');
+      setInputSearch('');
+      // dispatch(fetchBuyer(currentPage, limit));
+    };
 
-  //   const handleSortByChange = (event) => {
-  //     const newSortBy = event.target.value === 'name' ? 'name' : null;
-  //     setSortBy(newSortBy);
-  //     if (newSortBy) {
-  //       dispatch(sortBuyers(currentPage, limit));
-  //     } else {
-  //       dispatch(fetchBuyer(currentPage, limit));
-  //     }
-  //   };
+    const handleSortByChange = (event) => {
+      dispatch(setSortBy(event.target.value));
+    };
 
   useEffect(() => {
     dispatch(getAllEmployees());
@@ -133,14 +127,14 @@ const Employee_Cards = () => {
 
   return (
     <>
-      {/* <Paper
+      <Paper
         component="form"
         sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400, margin: "50px auto" }}
       >
         <InputBase
           sx={{ ml: 1, flex: 1 }}
-          placeholder="Поиск по имени или адресу"
-          inputProps={{ 'aria-label': 'Search name or addresss' }}
+          placeholder="Поиск"
+          inputProps={{ 'aria-label': 'Search name, position, email or address' }}
           value={inputSearch}
           onChange={handleSearchChange}
         />
@@ -151,9 +145,9 @@ const Employee_Cards = () => {
         <IconButton color="primary.contrastText" sx={{ p: '10px' }} aria-label="clear" onClick={handleClearSearch}>
           <CloseIcon />
         </IconButton>
-      </Paper> */}
+      </Paper>
       <div className="wrapper">
-        {/* <div className="filter_product_category">
+        <div className="filter_product_category">
           <FormControl>
             <FormLabel>Сортировка</FormLabel>
             <RadioGroup
@@ -162,10 +156,12 @@ const Employee_Cards = () => {
               onChange={handleSortByChange}
             >
               <FormControlLabel value="name" control={<Radio />} label="По имени" />
+              <FormControlLabel value="start_date" control={<Radio />} label="По дате приема на работу" />
+              <FormControlLabel value="age" control={<Radio />} label="По возрасту" />
               <FormControlLabel value="" control={<Radio />} label="Отменить" />
             </RadioGroup>
           </FormControl>
-        </div> */}
+        </div>
         <div className='field_with_card_and_numeration'>
           <div className="cards">
             {employees.map(item => (
