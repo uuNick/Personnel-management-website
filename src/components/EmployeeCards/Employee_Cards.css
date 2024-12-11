@@ -1,0 +1,33 @@
+.wrapper {
+    display: flex;
+    row-gap: 10px;
+    margin: 60px;
+    justify-content: space-around;
+}
+
+.cards {
+    display: flex;
+    max-width: 23em;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    justify-items: center;
+    column-gap: 30px;
+    row-gap: 40px;
+    margin: 60px 0;
+    max-width: 1000px;
+}
+
+.field_with_card_and_numeration {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+.filter_product_category{
+    margin-top: 6em;
+    display: flex;
+    flex-direction: column;
+}
