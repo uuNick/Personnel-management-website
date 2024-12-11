@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllEmployees, setSortBy, getPartEmployess } from '../../actions/employeeAction';
+import { getAllEmployees, setSortBy, setCurrentPage, getPartEmployess, getPartFindAndSortEmployess, getPartFindEmployee, getPartSortedEmployees } from '../../actions/employeeAction';
 import './Employee_Cards.css';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
 import {
   Card,
   CardHeader,
   CardMedia,
   CardContent,
   Typography,
+  IconButton,
   CardActions,
   Button,
   Dialog,
@@ -37,29 +37,36 @@ const Employee_Cards = () => {
   const dispatch = useDispatch();
   const { employees, part_employees, currentPage, totalPages, limit, loading, error } = useSelector(state => state.employee);
   const [open, setOpen] = useState(false);
-  //const [buyerToDelete, setbuyerToDelete] = useState(null);
-  const [sortBy, setSortBy] = useState(null);
+  const [EmployeeToDelete, setEmployeeToDelete] = useState(null);
+  const [sortBy, setSortBy] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [inputSearch, setInputSearch] = useState('');
+
+  const fetchEmployees = (page, limit) => {
+    if (searchQuery.trim() !== '' && sortBy !== '') {
+      dispatch(getPartFindAndSortEmployess(page, limit, searchQuery, sortBy));
+    } else if (searchQuery.trim() !== '') {
+      dispatch(getPartFindEmployee(page, limit, searchQuery));
+    } else if (sortBy !== '') {
+      dispatch(getPartSortedEmployees(page, limit, sortBy));
+    } else {
+      dispatch(getPartEmployess(page, limit));
+    }
+  };
 
   const handleSearchChange = (event) => {
     setInputSearch(event.target.value);
   };
 
   const handleSearchSubmit = () => {
-    console.log(inputSearch);
     setSearchQuery(inputSearch);
-    // if (searchQuery.trim() !== '') {
-    //   dispatch(searchBuyers(searchQuery, currentPage, limit));
-    // } else {
-    //   dispatch(getPartEmployess(currentPage, limit));
-    // }
+    fetchEmployees(currentPage, limit)
   };
 
   const handleClearSearch = () => {
     setSearchQuery('');
     setInputSearch('');
-    dispatch(getPartEmployess(currentPage, limit));
+    fetchEmployees(currentPage, limit);
   };
 
   //Сортировка по данным в Redux
@@ -67,61 +74,53 @@ const Employee_Cards = () => {
   //   dispatch(setSortBy(event.target.value));
   // };
 
+  const handleSortByChange = (event) => {
+    const newSortBy = event.target.value;
+    const validSortOptions = ["fullname", "start_date", "birth_date"];
+    const sortByValue = validSortOptions.includes(newSortBy) ? newSortBy : '';
+    setSortBy(sortByValue);
+    fetchEmployees(currentPage, limit);
+  };
+
   useEffect(() => {
     dispatch(getPartEmployess(currentPage, limit));
   }, [dispatch, currentPage, limit]);
 
-  // useEffect(() => {
-  //   if (searchQuery) {
-  //     dispatch(searchBuyers(searchQuery, currentPage, limit));
-  //   } else if (sortBy) {
-  //     dispatch(sortBuyers(currentPage, limit, sortBy));
-  //   } else {
-  //     dispatch(getPartEmployess(currentPage, limit));
-  //   }
-  // }, [searchQuery, sortBy, dispatch, currentPage, limit]);
-
-  //   const buyersToDisplay = searchQuery.trim() !== '' ? findBuyer : (sortBy ? sortedBuyer : buyer);
+  useEffect(() => {
+    fetchEmployees(currentPage, limit);
+  }, [searchQuery, sortBy, dispatch, currentPage, limit]);
 
   const handlePageChange = (page) => {
-    // if (searchQuery.trim() !== '') {
-    //   dispatch(searchBuyers(searchQuery, page, limit));
-    // }
-    // else if (sortBy) {
-    //   dispatch(sortBuyers(page, limit, sortBy));
-    // } else {
-    //   dispatch(fetchBuyer(page, limit));
-    // }
-    dispatch(getPartEmployess(page, limit));
+    fetchEmployees(page, limit);
   };
 
 
-  //   const navigate = useNavigate()
+  const navigate = useNavigate()
 
-  //   const goToAddBuyer = () => {
-  //     navigate("/addBuyer");
-  //   }
+  const goToAddEmployee = () => {
+    navigate("/addEmployee");
+  }
 
-  //   const handleEdit = (item) => {
-  //     navigate(`/editBuyer/${item.buyer_id}`, { state: item });
-  //   };
+  const handleEdit = (item) => {
+    navigate(`/editEmployee/${item.id}`, { state: item });
+  };
 
-  //   const handleDeleteOpen = (item) => {
-  //     setOpen(true);
-  //     setbuyerToDelete(item);
-  //   };
+  const handleDeleteOpen = (item) => {
+    setOpen(true);
+    setEmployeeToDelete(item);
+  };
 
-  //   const handleDeleteClose = () => {
-  //     setOpen(false);
-  //     setbuyerToDelete(null);
-  //   };
+  const handleDeleteClose = () => {
+    setOpen(false);
+    setEmployeeToDelete(null);
+  };
 
-  //   const handleDeleteConfirm = () => {
-  //     if (buyerToDelete) {
-  //       dispatch(deleteBuyer(buyerToDelete.buyer_id));
-  //       handleDeleteClose();
-  //     }
-  //   };
+  const handleDeleteConfirm = () => {
+    if (EmployeeToDelete) {
+      //dispatch(deleteBuyer(buyerToDelete.buyer_id));
+      handleDeleteClose();
+    }
+  };
 
   if (loading) return <p>Загрузка...</p>;
   if (error) return <p>Ошибка: {error}</p>;
@@ -154,11 +153,11 @@ const Employee_Cards = () => {
             <RadioGroup
               value={sortBy || ''}
               name="sort"
-              //onChange={handleSortByChange}
+              onChange={handleSortByChange}
             >
-              <FormControlLabel value="name" control={<Radio />} label="По имени" />
+              <FormControlLabel value="fullname" control={<Radio />} label="По имени" />
               <FormControlLabel value="start_date" control={<Radio />} label="По дате приема на работу" />
-              <FormControlLabel value="age" control={<Radio />} label="По возрасту" />
+              <FormControlLabel value="birth_date" control={<Radio />} label="По возрасту" />
               <FormControlLabel value="" control={<Radio />} label="Отменить" />
             </RadioGroup>
           </FormControl>
@@ -166,28 +165,37 @@ const Employee_Cards = () => {
         <div className='field_with_card_and_numeration'>
           <div className="cards">
             {part_employees.map(item => (
-              <Card key={item.id} sx={{ width: 345 }}>
+              <Card key={item.id} sx={{ width: 345, textAlign: "center" }}>
                 <CardHeader
                   title={item.fullname}
                 />
-                <CardMedia
-                  component="img"
-                  height="350"
-                  image={item.imageUrl ? `http://localhost:7001${item.imageUrl}` : noPhoto}
-                  alt="text"
-                />
+                <a href={`#`} style={{ display: 'block' }}> {/* Добавлено overflow: hidden */}
+                  <CardMedia
+                    component="img"
+                    height="350"
+                    image={item.imageUrl ? `http://localhost:7001${item.imageUrl}` : noPhoto}
+                    alt="text"
+                    sx={{
+                      '&:hover': {
+                        transform: 'scale(1.1)',
+                        transition: 'transform 0.3s ease', /* Добавлено для плавной анимации */
+                      }
+                    }
+                    }
+                  />
+                </a>
                 <CardContent>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  <Typography variant="h5" sx={{ color: 'text.secondary' }}>
                     {item.position}
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.primary', marginTop: "20px" }}>
+                  {/* <Typography variant="body2" sx={{ color: 'text.primary', marginTop: "20px" }}>
                     {item.email}
-                  </Typography >
+                  </Typography > */}
                 </CardContent>
-                {/* <CardActions>
-                  <Button size="small" color='primary.contrastText' onClick={() => handleEdit(item)}>Редактировать</Button>
-                  <Button size="small" color='primary.contrastText' onClick={() => handleDeleteOpen(item)} >Удалить</Button>
-                </CardActions> */}
+                <CardActions sx={{justifyContent: "space-between"}}>
+                  <Button size="small" color='primary.contrastText' sx={{border: '1px solid gray', fontSize: '14px'}} onClick={() => handleEdit(item)}>Редактировать</Button>
+                  <Button size="small" color='primary.contrastText' sx={{border: '1px solid gray', fontSize: '14px'}} onClick={() => handleDeleteOpen(item)} >Удалить</Button>
+                </CardActions>
               </Card>
             ))}
           </div>

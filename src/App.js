@@ -7,6 +7,8 @@ import Registration from "./pages/Authorization/Registration";
 import ResetPage from "./pages/Authorization/ResetPage";
 import ResetPassword from "./pages/Authorization/ResetPassword";
 import Manager from "./pages/Manager";
+import AddEmployee from "./pages/AddEmployee";
+import RedactEmployee from "./pages/RedactEmployee";
 
 function App() {
   return (
@@ -19,6 +21,9 @@ function App() {
           <Route path="/reset" element={<ResetPage />} />
           <Route path="/resetPassword" element={<ResetPassword />} />
           <Route path="/manager" element={<Manager />} />
+          <Route path="/addEmployee" element={<AddEmployee />} />
+          <Route path="/redactEmployee" element={<RedactEmployee />} />
+          
           <Route path="*" element={<NotFound404 />} />
         </Routes>
       </BrowserRouter>

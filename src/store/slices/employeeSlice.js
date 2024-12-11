@@ -2,8 +2,12 @@ import {
   FETCH_EMPLOYEE,
   FETCH_EMPLOYEE_SUCCESS,
   FETCH_PART_EMPLOYEE_SUCCESS,
+  FETCH_PART_SEARCH_AND_SORT_EMPLOYEE_SUCCESS,
+  FETCH_PART_SORT_EMPLOYEE_SUCCESS,
+  FETCH_PART_SEARCH_EMPLOYEE_SUCCESS,
   FETCH_EMPLOYEE_FAILURE,
   SET_SORT_BY,
+  SET_CURRENT_PAGE
 } from '../../actionTypes';
 
 const initialState = {
@@ -25,6 +29,9 @@ const employeeSlice = (state = initialState, action) => {
       return { ...state, loading: true, error: null };
 
     case FETCH_PART_EMPLOYEE_SUCCESS:
+    case FETCH_PART_SEARCH_AND_SORT_EMPLOYEE_SUCCESS:
+    case FETCH_PART_SEARCH_EMPLOYEE_SUCCESS:
+    case FETCH_PART_SORT_EMPLOYEE_SUCCESS:
       return handlePagination(state, action.payload, 'part_employees');
 
     case FETCH_EMPLOYEE_SUCCESS:
@@ -43,6 +50,9 @@ const employeeSlice = (state = initialState, action) => {
         sortedEmployees = [...state.originalEmployees];
       }
       return { ...state, employees: sortedEmployees, sortBy };
+
+    case SET_CURRENT_PAGE:
+      return { ...state, currentPage: action.payload };
 
     case FETCH_EMPLOYEE_FAILURE:
       return { ...state, loading: false, employees: [], error: action.payload };
