@@ -119,6 +119,76 @@ class employeeService {
             }
         }
     }
+
+    async updateEmployee(employee_id, data) {
+        try {
+            const response = await axios.put(`${hostServer}employees/${employee_id}`, data);
+
+            if (response.status === 200) {
+                return response;
+            } else if (response.status === 404) {
+                throw new Error('Работник с указанным ID не найден');
+            } else {
+                throw new Error(`Ошибка сервера`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при изменеии работника: ${error}`);
+            }
+        }
+    }
+
+    async updateEmployeeImage(employee_id, formData) {
+        try {
+            const response = await axios.patch(`${hostServer}employees/${employee_id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            if (response.status === 200) {
+                return response;
+            } else if (response.status === 404) {
+                throw new Error('Работник с указанным ID не найден');
+            } else {
+                throw new Error(`Ошибка сервера`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при изменеии работника: ${error}`);
+            }
+        }
+    }
+
+    async getEmployeeById(employee_id) {
+        try {
+            const response = await axios.get(`${hostServer}employees/${employee_id}`);
+
+            if (response.status === 200) {
+                return response.data;
+            } else if (response.status === 404) {
+                throw new Error('Работник с указанным ID не найден');
+            } else {
+                throw new Error(`Ошибка сервера`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при изменеии работника: ${error}`);
+            }
+        }
+    }
 }
 
 export default new employeeService();

@@ -22,7 +22,7 @@ function App() {
           <Route path="/resetPassword" element={<ResetPassword />} />
           <Route path="/manager" element={<Manager />} />
           <Route path="/addEmployee" element={<AddEmployee />} />
-          <Route path="/redactEmployee" element={<RedactEmployee />} />
+          <Route path="/editEmployee/:id" element={<RedactEmployee />} />
           
           <Route path="*" element={<NotFound404 />} />
         </Routes>

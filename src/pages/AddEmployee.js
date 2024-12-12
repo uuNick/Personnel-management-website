@@ -15,6 +15,7 @@ import {
     InputLabel,
     FormHelperText
 } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const validationSchema = Yup.object({
     fullname: Yup.string()
@@ -33,7 +34,7 @@ const validationSchema = Yup.object({
         .max(new Date('2024-12-31'), 'Дата принятия должна быть не позже 2024 года'),
     phone_number: Yup.string()
         .required('Укажите номер телефона')
-        .matches(/^[0-9]+$/, "Укажите только цифры")
+        .matches(/^\+?[0-9]+$/, "Укажите цифры или знак '+' в начале")
         .min(10, 'Номер должен содержать минимум 10 цифр')
         .max(20, 'Номер не может превышать 20 цифр'),
     email: Yup.string()
@@ -49,8 +50,8 @@ const AddEmployee = () => {
     const [open, setOpen] = useState(false);
     const [severity, setSeverity] = useState('success');
     const [message, setMessage] = useState('');
-    const [image, setImage] = useState(null); // Состояние для изображения
-    const [imageError, setImageError] = useState(null); // Состояние для ошибки изображения
+    const [image, setImage] = useState(null);
+    const [imageError, setImageError] = useState(null);
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -82,7 +83,7 @@ const AddEmployee = () => {
             address: '',
         },
         validationSchema: validationSchema,
-        onSubmit: (values, { resetForm }) => {
+        onSubmit: async (values, { resetForm }) => {
             if (imageError) {
                 return;
             }
@@ -99,7 +100,7 @@ const AddEmployee = () => {
                         formData.append(key, values[key]);
                     }
                 }
-                EmployeeService.createEmployee(formData);
+                await EmployeeService.createEmployee(formData);
                 handleCreatEmployeeSuccess("Работник успешно добавлен");
                 resetForm();
                 setImage(null);
@@ -186,8 +187,8 @@ const AddEmployee = () => {
                         style={{ display: 'none' }}
                     />
                     <label htmlFor="image">
-                        <Button variant="outlined" component="span" sx={{ border: "1px solid #D8D8D8", backgroundColor: "white" }} color='primary.contrastText' >
-                            Выбрать фото работника
+                        <Button variant="contained" component="span" sx={{ border: "1px solid #D8D8D8", backgroundColor: "white" }} color='primary.contrastText' tabIndex={-1} startIcon={<CloudUploadIcon />} >
+                            Выбрать фото
                         </Button>
                     </label>
                     {imageError && <FormHelperText>{imageError}</FormHelperText>}
