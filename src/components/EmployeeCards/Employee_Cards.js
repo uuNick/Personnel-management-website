@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { getAllEmployees, setSortBy, setCurrentPage, getPartEmployess, getPartFindAndSortEmployess, getPartFindEmployee, getPartSortedEmployees } from '../../actions/employeeAction';
 import './Employee_Cards.css';
 import SearchIcon from '@mui/icons-material/Search';
@@ -169,12 +169,12 @@ const Employee_Cards = () => {
                 <CardHeader
                   title={item.fullname}
                 />
-                <a href={`#`} style={{ display: 'block' }}> {/* Добавлено overflow: hidden */}
+                <Link to={`/detailedInfo/${item.id}`} style={{ display: 'block' }}> {/* Добавлено overflow: hidden */}
                   <CardMedia
                     component="img"
                     height="300"
                     image={item.imageUrl ? `http://localhost:7001${item.imageUrl}` : noPhoto}
-                    alt="text"
+                    alt="employee"
                     sx={{
                       '&:hover': {
                         transform: 'scale(1.1)',
@@ -183,7 +183,7 @@ const Employee_Cards = () => {
                     }
                     }
                   />
-                </a>
+                </Link>
                 <CardContent>
                   <Typography variant="h5" sx={{ color: 'text.secondary' }}>
                     {item.position}

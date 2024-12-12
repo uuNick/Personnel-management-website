@@ -7,11 +7,13 @@ import {
   FETCH_PART_SEARCH_EMPLOYEE_SUCCESS,
   FETCH_EMPLOYEE_FAILURE,
   SET_SORT_BY,
-  SET_CURRENT_PAGE
+  SET_CURRENT_PAGE,
+  FETCH_EMPLOYEE_BY_ID_SUCCESS
 } from '../../actionTypes';
 
 const initialState = {
   employees: [],
+  employee: null,
   part_employees: [],
   originalEmployees: [],
   total: 0,
@@ -26,7 +28,7 @@ const initialState = {
 const employeeSlice = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_EMPLOYEE:
-      return { ...state, loading: true, error: null };
+      return { ...state, loading: true, error: null, employee: null };
 
     case FETCH_PART_EMPLOYEE_SUCCESS:
     case FETCH_PART_SEARCH_AND_SORT_EMPLOYEE_SUCCESS:
@@ -36,6 +38,9 @@ const employeeSlice = (state = initialState, action) => {
 
     case FETCH_EMPLOYEE_SUCCESS:
       return { ...state, loading: false, employees: action.payload, originalEmployees: [...action.payload], error: null };
+
+    case FETCH_EMPLOYEE_BY_ID_SUCCESS:
+      return { ...state, employee: action.payload, loading: false, error: null };
 
     case SET_SORT_BY:
       const { sortBy } = action.payload;
@@ -55,7 +60,7 @@ const employeeSlice = (state = initialState, action) => {
       return { ...state, currentPage: action.payload };
 
     case FETCH_EMPLOYEE_FAILURE:
-      return { ...state, loading: false, employees: [], error: action.payload };
+      return { ...state, loading: false, employees: [], error: action.payload, employee: null };
 
     default:
       return state;

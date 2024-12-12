@@ -9,6 +9,8 @@ import ResetPassword from "./pages/Authorization/ResetPassword";
 import Manager from "./pages/Manager";
 import AddEmployee from "./pages/AddEmployee";
 import RedactEmployee from "./pages/RedactEmployee";
+import DetailedEmployeeInfo from "./pages/DetailedEmployeeInfo";
+
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
           <Route path="/manager" element={<Manager />} />
           <Route path="/addEmployee" element={<AddEmployee />} />
           <Route path="/editEmployee/:id" element={<RedactEmployee />} />
+          <Route path="/detailedInfo/:id" element={<DetailedEmployeeInfo/>}/>
           
           <Route path="*" element={<NotFound404 />} />
         </Routes>

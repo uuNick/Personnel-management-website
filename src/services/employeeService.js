@@ -173,7 +173,7 @@ class employeeService {
             const response = await axios.get(`${hostServer}employees/${employee_id}`);
 
             if (response.status === 200) {
-                return response.data;
+                return response;
             } else if (response.status === 404) {
                 throw new Error('Работник с указанным ID не найден');
             } else {
@@ -181,7 +181,7 @@ class employeeService {
             }
         } catch (error) {
             if (error.response) {
-                throw error.response.data;
+                throw error.response;
             } else if (error.request) {
                 throw new Error('Ошибка сети');
             } else {

@@ -7,7 +7,8 @@ import {
   FETCH_PART_SEARCH_EMPLOYEE_SUCCESS,
   FETCH_EMPLOYEE_FAILURE,
   SET_SORT_BY,
-  SET_CURRENT_PAGE
+  SET_CURRENT_PAGE,
+  FETCH_EMPLOYEE_BY_ID_SUCCESS
 } from '../actionTypes';
 import EmployeeService from "../services/employeeService";
 
@@ -60,6 +61,16 @@ export const getPartSortedEmployees = (page = 1, limit = 10, sortBy = "fullname"
     dispatch({ type: FETCH_EMPLOYEE_FAILURE, payload: error.message });
   }
 };
+
+export const getEmployeeById = (employee_id) => async (dispatch) => {
+  dispatch({ type: FETCH_EMPLOYEE });
+  try {
+    const response = await EmployeeService.getEmployeeById(employee_id);
+    dispatch({ type: FETCH_EMPLOYEE_BY_ID_SUCCESS, payload: response.data});
+  } catch (error) {
+    dispatch({ type: FETCH_EMPLOYEE_FAILURE, payload: error.data.message });
+  }
+}
 
 
 export const setSortBy = (sortBy) => ({

@@ -120,7 +120,7 @@ const RedactEmployee = () => {
                     }
                     await EmployeeService.updateEmployee(id, updatedValues);
                     const updatedItem = await EmployeeService.getEmployeeById(id);
-                    setItem(updatedItem);
+                    setItem(updatedItem.data);
                 }
                 handleRedactEmployeeSuccess('Работник успешно изменен');
                 setImage(null);
