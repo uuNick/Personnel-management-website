@@ -97,6 +97,28 @@ class employeeService {
             }
         }
     }
+
+    async createEmployee(formData) {
+        try {
+            const response = await axios.post(`${hostServer}employees/`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+
+            if (response.status === 201) {
+                return response;
+            } else {
+                throw new Error(`Ошибка при создании работника: ${response.status}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при создании работника: ${error}`);
+            }
+        }
+    }
 }
 
 export default new employeeService();

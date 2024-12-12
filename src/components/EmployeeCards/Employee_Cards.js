@@ -172,7 +172,7 @@ const Employee_Cards = () => {
                 <a href={`#`} style={{ display: 'block' }}> {/* Добавлено overflow: hidden */}
                   <CardMedia
                     component="img"
-                    height="350"
+                    height="300"
                     image={item.imageUrl ? `http://localhost:7001${item.imageUrl}` : noPhoto}
                     alt="text"
                     sx={{
@@ -193,15 +193,15 @@ const Employee_Cards = () => {
                   </Typography > */}
                 </CardContent>
                 <CardActions sx={{justifyContent: "space-between"}}>
-                  <Button size="small" color='primary.contrastText' sx={{border: '1px solid gray', fontSize: '14px'}} onClick={() => handleEdit(item)}>Редактировать</Button>
-                  <Button size="small" color='primary.contrastText' sx={{border: '1px solid gray', fontSize: '14px'}} onClick={() => handleDeleteOpen(item)} >Удалить</Button>
+                  <Button size="small" color='primary.contrastText' sx={{fontSize: '14px'}} onClick={() => handleEdit(item)}>Редактировать</Button>
+                  <Button size="small" color='primary.contrastText' sx={{fontSize: '14px'}} onClick={() => handleDeleteOpen(item)} >Удалить</Button>
                 </CardActions>
               </Card>
             ))}
           </div>
           <Numeration totalPages={totalPages} currentPage={currentPage} handlePageChange={handlePageChange} />
-          {/* <Button onClick={goToAddBuyer} color='primary.contrastText' sx={{ marginBottom: "50px" }}>Добавить покупателя</Button>
-          <Dialog open={open} onClose={handleDeleteClose}>
+          <Button onClick={goToAddEmployee} color='primary.contrastText' sx={{ marginBottom: "50px" }}>Добавить работника</Button>
+          {/* <Dialog open={open} onClose={handleDeleteClose}>
             <DialogTitle>Подтверждение удаления</DialogTitle>
             <DialogContent>
               <DialogContentText>

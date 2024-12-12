@@ -22,7 +22,7 @@ const theme = createTheme({
                     borderRadius: '0.75em',
                     padding: '1em 2em',
                     margin: '0',
-                    border: '1px solid #ededed',
+                    border: '1px solid gray',
                     transition: '240ms ease-out',
                     textTransform: 'none',
                     '&:hover': {
