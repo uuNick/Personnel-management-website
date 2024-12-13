@@ -10,6 +10,7 @@ import Manager from "./pages/Manager";
 import AddEmployee from "./pages/AddEmployee";
 import RedactEmployee from "./pages/RedactEmployee";
 import DetailedEmployeeInfo from "./pages/DetailedEmployeeInfo";
+import SickLeaves from "./pages/SickLeaves";
 
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
           <Route path="/addEmployee" element={<AddEmployee />} />
           <Route path="/editEmployee/:id" element={<RedactEmployee />} />
           <Route path="/detailedInfo/:id" element={<DetailedEmployeeInfo/>}/>
-          
+          <Route path="/sickLeaves" element={<SickLeaves />} />
           <Route path="*" element={<NotFound404 />} />
         </Routes>
       </BrowserRouter>
