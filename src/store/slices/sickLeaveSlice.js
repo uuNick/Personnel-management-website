@@ -4,6 +4,8 @@ import {
     FETCH_SORTED_PART_SICKLEAVES_SUCCESS,
     FETCH_SICKLEAVES_FAILURE,
     SET_CURRENT_PAGE,
+    FETCH_SEARCH_AND_SORT_SUCCESS,
+    FETCH_SEARCH_PART_SUCCESS
 } from '../../actionTypes';
 
 const initialState = {
@@ -25,6 +27,8 @@ const sickLeaveSlice = (state = initialState, action) => {
 
         case FETCH_PART_SICKLEAVES_SUCCESS:
         case FETCH_SORTED_PART_SICKLEAVES_SUCCESS:
+        case FETCH_SEARCH_AND_SORT_SUCCESS:
+        case FETCH_SEARCH_PART_SUCCESS:
             return handlePagination(state, action.payload, 'part_sickLeaves');
 
         case SET_CURRENT_PAGE:
@@ -43,7 +47,7 @@ const handlePagination = (state, payload, dataKey) => ({
     [dataKey]: payload.data,
     total: payload.total,
     currentPage: payload.currentPage,
-    totalPages: payload.pages,
+    totalPages: Math.ceil(payload.total / state.limit),
     loading: false,
     error: null,
 });
