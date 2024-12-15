@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router';
 import { getAllEmployees } from '../../actions/employeeAction';
 import { getAllDocuments } from '../../actions/documentAction';
-import { getPartSickLeaves, getPartSortedSickLeaves, updateCurrentPage, getPartSearchByDateAndSortSickLeaves, getPartSearchByDateSickLeaves } from '../../actions/sickLeaveAction';
+import { getPartVacations, getPartSortedVacations, updateCurrentPage, getPartSearchByDateAndSortVacations, getPartSearchByDateVacations } from '../../actions/vacationAction';
 import {
     Table,
     TableBody,
@@ -19,13 +19,13 @@ import {
 } from '@mui/material';
 
 
-const SickLeaveMain = () => {
+const VacationMain = () => {
 
     const dispatch = useDispatch();
     const [sortBy, setSortBy] = useState(null);
     const { employees } = useSelector(state => state.employee);
     const { documents } = useSelector(state => state.documents);
-    const { part_sickLeaves, currentPage, totalPages, total, limit, loading, error } = useSelector(state => state.sickLeave);
+    const { part_vacations, currentPage, totalPages, total, limit, loading, error } = useSelector(state => state.vacation);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [startDateError, setStartDateError] = useState(false);
@@ -51,9 +51,9 @@ const SickLeaveMain = () => {
 
         if (startDateValid && endDateValid) {
             if (sortBy) {
-                dispatch(getPartSearchByDateAndSortSickLeaves(currentPage, limit, startDate, endDate, sortBy));
+                dispatch(getPartSearchByDateAndSortVacations(currentPage, limit, startDate, endDate, sortBy));
             } else {
-                dispatch(getPartSearchByDateSickLeaves(currentPage, limit, startDate, endDate));
+                dispatch(getPartSearchByDateVacations(currentPage, limit, startDate, endDate));
             }
         }
     };
@@ -65,10 +65,10 @@ const SickLeaveMain = () => {
         setEndDateError(false);
 
         if (sortBy) {
-            dispatch(getPartSortedSickLeaves(currentPage, limit, sortBy));
+            dispatch(getPartSortedVacations(currentPage, limit, sortBy));
         }
         else {
-            dispatch(getPartSickLeaves(currentPage, limit));
+            dispatch(getPartVacations(currentPage, limit));
         }
 
     }
@@ -76,15 +76,15 @@ const SickLeaveMain = () => {
     useEffect(() => {
         if (startDate !== '' && endDate !== '') {
             if (sortBy) {
-                dispatch(getPartSearchByDateAndSortSickLeaves(currentPage, limit, startDate, endDate, sortBy));
+                dispatch(getPartSearchByDateAndSortVacations(currentPage, limit, startDate, endDate, sortBy));
             } else {
-                dispatch(getPartSearchByDateSickLeaves(currentPage, limit, startDate, endDate));
+                dispatch(getPartSearchByDateVacations(currentPage, limit, startDate, endDate));
             }
         } else {
             if (sortBy) {
-                dispatch(getPartSortedSickLeaves(currentPage, limit, sortBy));
+                dispatch(getPartSortedVacations(currentPage, limit, sortBy));
             } else {
-                dispatch(getPartSickLeaves(currentPage, limit));
+                dispatch(getPartVacations(currentPage, limit));
             }
         }
         if (employees.length === 0 && documents.length === 0) {
@@ -100,15 +100,15 @@ const SickLeaveMain = () => {
             const newSortBy = sortBy === columnName ? null : columnName;
             setSortBy(newSortBy);
             dispatch(newSortBy
-                ? getPartSearchByDateAndSortSickLeaves(currentPage, limit, startDate, endDate, newSortBy)
-                : getPartSearchByDateSickLeaves(currentPage, limit, startDate, endDate)
+                ? getPartSearchByDateAndSortVacations(currentPage, limit, startDate, endDate, newSortBy)
+                : getPartSearchByDateVacations(currentPage, limit, startDate, endDate)
             );
         } else {
             const newSortBy = sortBy === columnName ? null : columnName;
             setSortBy(newSortBy);
             dispatch(newSortBy
-                ? getPartSortedSickLeaves(currentPage, limit, newSortBy)
-                : getPartSickLeaves(currentPage, limit)
+                ? getPartSortedVacations(currentPage, limit, newSortBy)
+                : getPartVacations(currentPage, limit)
             );
         }
     }
@@ -117,11 +117,11 @@ const SickLeaveMain = () => {
         dispatch(updateCurrentPage(newPage + 1));
         if (sortBy) {
             console.log(`вызов сортировки ${sortBy}`);
-            dispatch(getPartSortedSickLeaves(newPage + 1, limit, sortBy));
+            dispatch(getPartSortedVacations(newPage + 1, limit, sortBy));
         }
         else {
             console.log("вызов обычный");
-            dispatch(getPartSickLeaves(newPage + 1, limit));
+            dispatch(getPartVacations(newPage + 1, limit));
         }
     };
 
@@ -200,22 +200,22 @@ const SickLeaveMain = () => {
                                     <TableCell key={'document_id'} align="center" onClick={() => handleSort('document_id')} sx={{ cursor: 'pointer' }} >Документ ID</TableCell>
                                     <TableCell key={'start_date'} align="center" onClick={() => handleSort('start_date')} sx={{ cursor: 'pointer' }} >Начало</TableCell>
                                     <TableCell key={'end_date'} align="center" onClick={() => handleSort('end_date')} sx={{ cursor: 'pointer' }} >Конец</TableCell>
-                                    <TableCell align="center">Диагноз</TableCell>
+                                    <TableCell align="center">Тип отпуска</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {part_sickLeaves.map((sickLeave) => (
+                                {part_vacations.map((vacation) => (
                                     <TableRow
-                                        key={sickLeave.id}
+                                        key={vacation.id}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell component="th" align='center' scope="row">
-                                            {employeeMap[sickLeave.employee_id] || 'Неизвестно'}
+                                            {employeeMap[vacation.employee_id] || 'Неизвестно'}
                                         </TableCell>
-                                        <TableCell align="center" sx={{ cursor: 'pointer' }}> <Link to = {`http://localhost:7001${documentMap[sickLeave.document_id]}`}  target="_blank"> {sickLeave.document_id} </Link></TableCell>
-                                        <TableCell align="center">{sickLeave.start_date}</TableCell>
-                                        <TableCell align="center">{sickLeave.end_date}</TableCell>
-                                        <TableCell align="center">{sickLeave.diagnosis || 'нет данных'}</TableCell>
+                                        <TableCell align="center" sx={{ cursor: 'pointer' }}> <Link to = {`http://localhost:7001${documentMap[vacation.document_id]}`}  target="_blank"> {vacation.document_id} </Link></TableCell>
+                                        <TableCell align="center">{vacation.start_date}</TableCell>
+                                        <TableCell align="center">{vacation.end_date}</TableCell>
+                                        <TableCell align="center">{vacation.type || 'нет данных'}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -236,4 +236,4 @@ const SickLeaveMain = () => {
     );
 };
 
-export default SickLeaveMain;
+export default VacationMain;
