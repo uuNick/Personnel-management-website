@@ -101,11 +101,15 @@ const DetailedInfo = () => {
                 justifyContent: 'space-around',
                 flexWrap: 'wrap',
             }}>
-                <Box>
-                    <Typography variant='h4' sx={{textAlign:'center', marginBottom: '20px'}}>Отпуска</Typography>
+                <Box sx = {{
+                    textAlign: 'center'
+                }}>
+                    <Typography variant='h4' sx={{marginBottom: '20px'}}>Отпуска</Typography>
                     <TableForEmployee type={'vacation'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdVacations} />
                 </Box>
-                <Box>
+                <Box sx = {{
+                    textAlign: 'center'
+                }}>
                     <Typography variant='h4' sx={{textAlign:'center', marginBottom: '20px'}}>Больничные</Typography>
                     <TableForEmployee type={'sickLeave'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdSickLeaves} />
                 </Box>
