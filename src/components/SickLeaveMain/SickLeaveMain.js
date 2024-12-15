@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router';
 import { getAllEmployees } from '../../actions/employeeAction';
 import { getAllDocuments } from '../../actions/documentAction';
-import { getPartSickLeaves, getPartSortedSickLeaves, updateCurrentPage, getPartSearchByDateAndSortSickLeaves, getPartSearchByDateSickLeaves } from '../../actions/sickLeaveAction';
+import { getPartSickLeaves, getPartSortedSickLeaves, updateCurrentPageForSickLeave, getPartSearchByDateAndSortSickLeaves, getPartSearchByDateSickLeaves } from '../../actions/sickLeaveAction';
 import {
     Table,
     TableBody,
@@ -114,7 +114,7 @@ const SickLeaveMain = () => {
     }
 
     const handleChangePage = (event, newPage) => {
-        dispatch(updateCurrentPage(newPage + 1));
+        dispatch(updateCurrentPageForSickLeave(newPage + 1));
         if (sortBy) {
             console.log(`вызов сортировки ${sortBy}`);
             dispatch(getPartSortedSickLeaves(newPage + 1, limit, sortBy));

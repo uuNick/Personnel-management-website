@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router';
 import { getAllEmployees } from '../../actions/employeeAction';
 import { getAllDocuments } from '../../actions/documentAction';
-import { getPartVacations, getPartSortedVacations, updateCurrentPage, getPartSearchByDateAndSortVacations, getPartSearchByDateVacations } from '../../actions/vacationAction';
+import { getPartVacations, getPartSortedVacations, updateCurrentPageForVacation, getPartSearchByDateAndSortVacations, getPartSearchByDateVacations } from '../../actions/vacationAction';
 import {
     Table,
     TableBody,
@@ -114,7 +114,7 @@ const VacationMain = () => {
     }
 
     const handleChangePage = (event, newPage) => {
-        dispatch(updateCurrentPage(newPage + 1));
+        dispatch(updateCurrentPageForVacation(newPage + 1));
         if (sortBy) {
             console.log(`вызов сортировки ${sortBy}`);
             dispatch(getPartSortedVacations(newPage + 1, limit, sortBy));

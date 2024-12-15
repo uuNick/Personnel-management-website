@@ -2,6 +2,7 @@ import {
   FETCH_DOCUMENTS,
   FETCH_DOCUMENTS_SUCCESS,
   FETCH_DOCUMENTS_FAILURE,
+  FETCH_DOCUMENT_BY_ID_SUCCESS
 } from '../../actionTypes';
 
 const initialState = {
@@ -29,8 +30,8 @@ const documentSlice = (state = initialState, action) => {
     case FETCH_DOCUMENTS_SUCCESS:
       return { ...state, loading: false, documents: action.payload, originalDocuments: [...action.payload], error: null };
 
-    // case FETCH_EMPLOYEE_BY_ID_SUCCESS:
-    //   return { ...state, employee: action.payload, loading: false, error: null };
+    case FETCH_DOCUMENT_BY_ID_SUCCESS:
+      return { ...state, document: action.payload, loading: false, error: null };
 
     // case SET_CURRENT_PAGE:
     //   return { ...state, currentPage: action.payload };

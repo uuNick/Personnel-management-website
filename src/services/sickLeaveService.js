@@ -78,6 +78,25 @@ class sickLeaveService {
             }
         }
     }
+
+    async getPartSearchByEmployeeIdSickLeaves(page, limit, employee_id) {
+        try {
+            const response = await axios.get(`${hostServer}sickLeaves/search_by_emp_id?page=${page}&limit=${limit}&employee_id=${employee_id}`);
+            if (response.status === 200) {
+                return response;
+            } else {
+                throw new Error(`Ошибка при получении больничных листов: ${response.data.message || 'Неизвестная ошибка'}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при получении больничных листов: ${error}`);
+            }
+        }
+    }
 }
 
 export default new sickLeaveService();

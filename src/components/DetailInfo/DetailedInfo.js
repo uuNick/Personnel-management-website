@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getEmployeeById } from '../../actions/employeeAction';
 import { useSelector, useDispatch } from 'react-redux';
+import TableForEmployee from "../TableForEmployee/TableForEmployee";
+import { getPartSearchByEmployeeIdSickLeaves } from '../../actions/sickLeaveAction';
+import { getPartSearchByEmployeeIdVacations } from '../../actions/vacationAction';
 import {
     Box,
     Typography,
-    Container,
-    Grid2,
-    Avatar,
-    Paper,
     Button,
     CardMedia,
     CircularProgress
@@ -97,6 +96,21 @@ const DetailedInfo = () => {
                     </Typography>
                 </Box>
             </Box >
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-around',
+                flexWrap: 'wrap',
+            }}>
+                <Box>
+                    <Typography variant='h4' sx={{textAlign:'center', marginBottom: '20px'}}>Отпуска</Typography>
+                    <TableForEmployee type={'vacation'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdVacations} />
+                </Box>
+                <Box>
+                    <Typography variant='h4' sx={{textAlign:'center', marginBottom: '20px'}}>Больничные</Typography>
+                    <TableForEmployee type={'sickLeave'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdSickLeaves} />
+                </Box>
+
+            </Box>
             <Box sx={{
                 display: "flex",
                 justifyContent: "center",

@@ -5,7 +5,8 @@ import {
   FETCH_SICKLEAVES_FAILURE,
   SET_CURRENT_PAGE,
   FETCH_SEARCH_AND_SORT_SUCCESS,
-  FETCH_SEARCH_PART_SUCCESS
+  FETCH_SEARCH_PART_SUCCESS,
+  FETCH_SICKLEVAES_BY_ID_SUCCESS
 } from '../actionTypes';
 import SickLeaveService from "../services/sickLeaveService";
 
@@ -50,7 +51,17 @@ export const getPartSearchByDateSickLeaves = (page = 1, limit = 10, start_date, 
   }
 }
 
-export const updateCurrentPage = (page) => ({
+export const getPartSearchByEmployeeIdSickLeaves = (page = 1, limit = 10, employee_id) => async (dispatch) => {
+  dispatch({ type: FETCH_SICKLEAVES });
+  try {
+    const response = await SickLeaveService.getPartSearchByEmployeeIdSickLeaves(page, limit, employee_id);
+    dispatch({ type: FETCH_SICKLEVAES_BY_ID_SUCCESS, payload: { ...response.data, currentPage: page, limit } });
+  } catch (error) {
+    dispatch({ type: FETCH_SICKLEAVES_FAILURE, payload: error.message });
+  }
+}
+
+export const updateCurrentPageForSickLeave = (page) => ({
   type: SET_CURRENT_PAGE,
   payload: page,
 });
