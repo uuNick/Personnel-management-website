@@ -19,6 +19,8 @@ import {
     Typography,
     Button,
 } from '@mui/material';
+import hostServerJSON from "../../hostServer.json";
+const hostServer = hostServerJSON.localhost_path;
 
 
 const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
@@ -162,7 +164,7 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
                                                     {employee.fullname}
                                                 </TableCell>
                                                 <TableCell align="center" sx={{ cursor: 'pointer' }}> {documentMap[item.document_id] && (
-                                                    <Link to={`http://localhost:7001${documentMap[item.document_id]}`} target="_blank">
+                                                    <Link to={`${hostServer}${documentMap[item.document_id]}`} target="_blank">
                                                         {item.document_id}
                                                     </Link>
                                                 )}

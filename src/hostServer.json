@@ -1,3 +1,4 @@
 {
-    "path": "http://localhost:7001/api/"
+    "path": "http://localhost:7001/api/",
+    "localhost_path": "http://localhost:7001"
 }

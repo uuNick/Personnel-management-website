@@ -12,7 +12,7 @@ import RedactEmployee from "./pages/RedactEmployee";
 import DetailedEmployeeInfo from "./pages/DetailedEmployeeInfo";
 import SickLeaves from "./pages/SickLeaves";
 import Vacations from "./pages/Vacations";
-
+import DaysOff from "./pages/DaysOff";
 
 function App() {
   return (
@@ -30,6 +30,7 @@ function App() {
           <Route path="/detailedInfo/:id" element={<DetailedEmployeeInfo/>}/>
           <Route path="/sickLeaves" element={<SickLeaves />} />
           <Route path="/vacations" element={<Vacations />} />
+          <Route path="/daysOff" element={<DaysOff />} />
           <Route path="*" element={<NotFound404 />} />
         </Routes>
       </BrowserRouter>
