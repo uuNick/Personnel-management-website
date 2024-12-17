@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
-//import { login } from "../services/authService";
+import { login } from "../../services/authService";
 import * as Yup from 'yup';
 import YupPassword from 'yup-password';
 import {
@@ -45,12 +45,12 @@ const Login = () => {
         validationSchema: validationSchema,
         onSubmit: async (values, { resetForm }) => {
             try {
-                //const response = await login(values.username, values.password);
-                //console.log(response);
-                //setUsernameError('');
-                //localStorage.setItem('roleNames', response.roleNames);
-                //localStorage.setItem('token', response.token);
-                //navigate('/furniture');
+                const response = await login(values.username, values.password);
+                console.log(response);
+                setUsernameError('');
+                localStorage.setItem('roleNames', response.roleNames);
+                localStorage.setItem('token', response.token);
+                navigate('/manager');
                 resetForm();
             } catch (e) {
                 if (e.message.includes("неверный")) {
@@ -132,11 +132,10 @@ const Login = () => {
                     type="submit"
                     variant="outlined"
                     color="primary.contrastText"
-                    sx={{ marginTop: "10px", marginBottom: "20px" }}
+                    sx={{ marginTop: "10px", marginBottom: "10px" }}
                 >
                     Войти
                 </Button>
-                <Typography>У вас нету аккаунта?<Link to="/registration">Зарегистрироваться</Link></Typography>
             </Box>
         </div>
     );

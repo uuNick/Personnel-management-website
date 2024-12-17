@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import YupPassword from 'yup-password';
 import { useNavigate } from 'react-router-dom';
-//import { resetPassword } from '../services/authService';
+import { resetPassword } from '../../services/authService';
 import {
     TextField,
     Button,

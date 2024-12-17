@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import YupPassword from 'yup-password';
 import { useNavigate } from 'react-router-dom';
-//import { registration } from '../services/authService';
+import { registration } from '../../services/authService';
 import {
     TextField,
     Button,
@@ -58,14 +58,14 @@ const Registration = () => {
         validationSchema: validationSchema,
         onSubmit: async (values, { resetForm }) => {
             try {
-                //const response = await registration(values);
-                //console.log(response);
-                //setUsernameError('');
-                //setEmailError('');
-                //localStorage.setItem('roleNames', response.roleNames);
-                //localStorage.setItem('token', response.token);
-                //navigate('/furniture');
-                //resetForm();
+                const response = await registration(values);
+                console.log(response);
+                setUsernameError('');
+                setEmailError('');
+                localStorage.setItem('roleNames', response.roleNames);
+                localStorage.setItem('token', response.token);
+                navigate('/manager');
+                resetForm();
             } catch (e) {
                 if (e.message.includes("уже существует")) {
                     setUsernameError("Пользователь с таким именем существует");

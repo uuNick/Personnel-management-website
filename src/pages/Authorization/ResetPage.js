@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 //import { Link } from 'react-router-dom';
 import YupPassword from 'yup-password';
 import { useNavigate } from 'react-router-dom';
-//import { resetPasswwordRequest } from '../services/authService';
+import { resetPasswwordRequest } from '../../services/authService';
 import {
     TextField,
     Button,
@@ -59,10 +59,10 @@ const Registration = () => {
         validationSchema: validationSchema,
         onSubmit: async (values, { resetForm }) => {
             try {
-                //const response = await resetPasswwordRequest(values);
-                //console.log(response);
-                //setEmailError('');
-                //handleSendLinkSuccess("Письмо с восстанавливающей ссылкой отправлено");
+                const response = await resetPasswwordRequest(values);
+                console.log(response);
+                setEmailError('');
+                handleSendLinkSuccess("Письмо с восстанавливающей ссылкой отправлено");
                 resetForm();
             } catch (e) {
                 if (e.message.includes("не зарегистрированн")) {
