@@ -44,6 +44,26 @@ class exportService {
             }
         }
     }
+    async exportPdf(data) {
+        try {
+            const response = await axios.post(`${hostServer}pdf/generate`, data, {
+                responseType: 'blob',
+            });
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                throw new Error(`Ошибка при экспорте таблицы в PDF: ${response.data.message || 'Неизвестная ошибка'}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Ошибка при экспорте таблицы в PDF: ${error}`);
+            }
+        }
+    }
 
 }
 

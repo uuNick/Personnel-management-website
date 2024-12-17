@@ -104,6 +104,26 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
         }
     }
 
+    const exportPdf = async (data) => {
+        const updatedData = addFullName(data);
+        try {
+            const response = await exportService.exportPdf(updatedData);
+            const url = window.URL.createObjectURL(new Blob([response]));
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `Report_${employee_id}.pdf`);
+
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Ошибка при скачивании PDF файла:', error);
+        }
+    }
+
     const documentMap = documents.reduce((map, document) => {
         map[document.id] = document.imageUrl;
         return map;
@@ -165,7 +185,7 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
                             />
                         </Box>
                         <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => exportExcel(common_part)}>Excel</Button>
-                        {/* <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px', margin: "0 20px" }} onClick={() => goBack()}>PDF</Button> */}
+                        <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px', margin: "0 20px" }} onClick={() => exportPdf(common_part)}>PDF</Button>
                         <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => exportWord(common_part)}>Word</Button>
                     </Box>
                 ) : (
