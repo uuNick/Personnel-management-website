@@ -5,6 +5,7 @@ import { getAllDocuments } from '../../actions/documentAction';
 import { getEmployeeById } from "../../actions/employeeAction";
 import { updateCurrentPageForSickLeave } from "../../actions/sickLeaveAction";
 import { updateCurrentPageForVacation } from "../../actions/vacationAction";
+import { updateCurrentPageForDaysOff } from "../../actions/dayOffActions";
 import exportService from '../../services/exportService';
 import {
     Table,
@@ -28,9 +29,16 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
     const dispatch = useDispatch();
     const { employee } = useSelector(state => state.employee);
     const { documents } = useSelector(state => state.documents);
-    const choosenStore = useSelector(state => type === 'vacation' ? state.vacation : state.sickLeave);
 
-    const { common_part, currentPage, totalPages, total, limit, loading, error } = choosenStore;
+    const { common_part, currentPage, totalPages, total, limit, loading, error } = useSelector(state => {
+        if (type === 'vacation') {
+            return state.vacation;
+        } else if (type === 'sickLeave') {
+            return state.sickLeave;
+        } else {
+            return state.dayOff;
+        }
+    });
 
     useEffect(() => {
 
@@ -47,16 +55,14 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
         if (type === 'vacation') {
             dispatch(updateCurrentPageForVacation(newPage + 1));
         }
-        else {
+        else if (type === 'sickLeave') {
             dispatch(updateCurrentPageForSickLeave(newPage + 1));
+        }
+        else {
+            dispatch(updateCurrentPageForDaysOff(newPage + 1));
         }
         dispatch(getPartSearch(newPage + 1, limit, employee_id));
     };
-
-    // const employeeMap = employees.reduce((map, employee) => {
-    //     map[employee.id] = employee.fullname;
-    //     return map;
-    // }, {});
 
 
     const addFullName = (data) => {
@@ -100,7 +106,7 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
             link.click();
 
             document.body.removeChild(link);
-            window.URL.revokeObjectURL(url); // Освобождаем память
+            window.URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Ошибка при скачивании Word файла:', error);
         }
@@ -126,10 +132,15 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
         }
     }
 
-    const documentMap = documents.reduce((map, document) => {
-        map[document.id] = document.imageUrl;
-        return map;
-    }, {});
+    let documentMap = {};
+    if (type !== 'dayOff') {
+        documentMap = documents.reduce((map, document) => {
+            map[document.id] = document.imageUrl;
+            return map;
+        }, {});
+    }
+
+
 
     if (loading) return <p>Загрузка...</p>;
     if (error) return <p>Ошибка: {error}</p>;
@@ -148,10 +159,20 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
                                     <TableHead>
                                         <TableRow>
                                             <TableCell align='center'>ФИО</TableCell>
-                                            <TableCell key={'document_id'} align="center" >Документ ID</TableCell>
+                                            {['vacation', 'sickLeave'].includes(type) && (
+                                                <TableCell key={'document_id'} align="center">
+                                                    Документ ID
+                                                </TableCell>
+                                            )}
                                             <TableCell key={'start_date'} align="center">Начало</TableCell>
                                             <TableCell key={'end_date'} align="center" >Конец</TableCell>
-                                            <TableCell align="center">{type === 'vacation' ? 'Тип отпуска' : 'Диагноз'}</TableCell>
+                                            <TableCell align="center">{
+                                                (() => {
+                                                    if (type === 'vacation') return 'Тип отпуска';
+                                                    if (type === 'sickLeave') return 'Диагноз';
+                                                    return 'Причина';
+                                                })()
+                                            }</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -163,15 +184,22 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
                                                 <TableCell component="th" align='center' scope="row">
                                                     {employee.fullname}
                                                 </TableCell>
-                                                <TableCell align="center" sx={{ cursor: 'pointer' }}> {documentMap[item.document_id] && (
-                                                    <Link to={`${hostServer}${documentMap[item.document_id]}`} target="_blank">
-                                                        {item.document_id}
-                                                    </Link>
+                                                {['vacation', 'sickLeave'].includes(type) && (
+                                                    <TableCell align="center" sx={{ cursor: 'pointer' }}>
+                                                        <Link to={`${hostServer}${documentMap[item.document_id]}`} target="_blank">
+                                                            {item.document_id}
+                                                        </Link>
+                                                    </TableCell>
                                                 )}
-                                                    {!documentMap[item.document_id] && <span>{item.document_id} (No link available)</span>}</TableCell>
                                                 <TableCell align="center">{item.start_date}</TableCell>
                                                 <TableCell align="center">{item.end_date}</TableCell>
-                                                <TableCell align="center">{[type === 'vacation' ? item.type : item.diagnosis] || 'нет данных'}</TableCell>
+                                                <TableCell align="center">
+                                                    {(() => {
+                                                        if (type === 'vacation') return item.type || 'нет данных';
+                                                        if (type === 'sickLeave') return item.diagnosis || 'нет данных';
+                                                        return item.reason || 'нет данных';
+                                                    })()}
+                                                </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>

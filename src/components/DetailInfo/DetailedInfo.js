@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import TableForEmployee from "../TableForEmployee/TableForEmployee";
 import { getPartSearchByEmployeeIdSickLeaves } from '../../actions/sickLeaveAction';
 import { getPartSearchByEmployeeIdVacations } from '../../actions/vacationAction';
+import { getPartSearchByEmployeeIdDaysOff } from '../../actions/dayOffActions';
 import {
     Box,
     Typography,
@@ -13,6 +14,8 @@ import {
     CircularProgress
 } from '@mui/material';
 import noPhoto2 from "../../images/no_photo_2.png";
+import hostServerJSON from "../../hostServer.json";
+const hostServer = hostServerJSON.localhost_path;
 
 const DetailedInfo = () => {
 
@@ -62,7 +65,7 @@ const DetailedInfo = () => {
                     <CardMedia
                         component="img"
                         height="250px"
-                        image={employee.imageUrl ? `http://localhost:7001${employee.imageUrl}` : noPhoto2}
+                        image={employee.imageUrl ? `${hostServer}${employee.imageUrl}` : noPhoto2}
                         alt="text"
                         sx={{
                             //objectFit: 'contain',
@@ -98,20 +101,34 @@ const DetailedInfo = () => {
             </Box >
             <Box sx={{
                 display: 'flex',
-                justifyContent: 'space-around',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
                 flexWrap: 'wrap',
             }}>
                 <Box sx = {{
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    maxWidth: '700px',
+                    marginBottom: "40px"
                 }}>
                     <Typography variant='h4' sx={{marginBottom: '20px'}}>Отпуска</Typography>
                     <TableForEmployee type={'vacation'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdVacations} />
                 </Box>
                 <Box sx = {{
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    maxWidth: '700px',
+                    marginBottom: "40px"
                 }}>
                     <Typography variant='h4' sx={{textAlign:'center', marginBottom: '20px'}}>Больничные</Typography>
                     <TableForEmployee type={'sickLeave'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdSickLeaves} />
+                </Box>
+                <Box sx = {{
+                    textAlign: 'center',
+                    maxWidth: '700px',
+                    marginBottom: "40px"
+                }}>
+                    <Typography variant='h4' sx={{textAlign:'center', marginBottom: '20px'}}>Прогулы</Typography>
+                    <TableForEmployee type={'dayOff'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdDaysOff} />
                 </Box>
 
             </Box>

@@ -30,7 +30,8 @@ import {
 } from '@mui/material';
 import noPhoto from '../../images/no_photo.jpg';
 import Numeration from '../Numeration/Numeration';
-
+import hostServerJSON from "../../hostServer.json";
+const hostServer = hostServerJSON.localhost_path;
 
 
 const Employee_Cards = () => {
@@ -173,7 +174,7 @@ const Employee_Cards = () => {
                   <CardMedia
                     component="img"
                     height="300"
-                    image={item.imageUrl ? `http://localhost:7001${item.imageUrl}` : noPhoto}
+                    image={item.imageUrl ? `${hostServer}${item.imageUrl}` : noPhoto}
                     alt="employee"
                     sx={{
                       '&:hover': {
