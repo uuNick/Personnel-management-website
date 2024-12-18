@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { getAllEmployees } from '../../actions/employeeAction';
 import { getAllDocuments } from '../../actions/documentAction';
-//import { getPartOfData, getPartSortedData, updateCurrentPage, getPartSearchByDateAndSortData, getPartSearchByDateData } from '../../actions/sickLeaveAction';
+import exportService from '../../services/exportService';
 import {
     Table,
     TableBody,
@@ -22,7 +22,7 @@ const hostServer = hostServerJSON.localhost_path;
 
 
 
-const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDateAndSortData, getPartSearchByDateData, updateCurrentPage }) => {
+const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDateAndSortData, getPartSearchByDateData, updateCurrentPage, getPartSortedDataService, getPartSearchByDateAndSortDataService, getPartSearchByDateDataService, getAllService }) => {
 
     const dispatch = useDispatch();
     const [sortBy, setSortBy] = useState(null);
@@ -100,8 +100,10 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
                 dispatch(getPartOfData(currentPage, limit));
             }
         }
-        if (employees.length === 0 && documents.length === 0) {
+        if (employees.length === 0) {
             dispatch(getAllEmployees());
+        }
+        if (documents.length === 0){
             dispatch(getAllDocuments());
         }
     }, [dispatch, currentPage, limit, sortBy]);
@@ -135,6 +137,130 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
             dispatch(getPartOfData(newPage + 1, limit));
         }
     };
+
+    const navigate = useNavigate();
+
+    const goBack = () => {
+        navigate('/inspector')
+    }
+
+    const addFullName = (data) => {
+        const updatedData = data.map(item => {
+            return {
+                fullname: employeeMap[item.employee_id] || 'Неизвестно',
+                ...item,
+            };
+        });
+        updatedData.forEach(item => delete item.id);
+        updatedData.forEach(item => delete item.employee_id);
+        return updatedData
+    }
+
+    const exportExcel = async () => {
+        let data;
+        if (startDate !== '' && endDate !== '') {
+            if (sortBy) {
+                const response = await getPartSearchByDateAndSortDataService(1, total, startDate, endDate, sortBy);
+                data = response.data.data;
+            } else {
+                const response = await getPartSearchByDateDataService(1, total, startDate, endDate);
+                data = response.data.data;
+            }
+        } else {
+            if (sortBy) {
+                const response = await getPartSortedDataService(1, total, sortBy);
+                data = response.data.data;
+            } else {
+                data = await getAllService();
+            }
+        }
+        const updatedData = addFullName(data);
+        try {
+            const response = await exportService.exportExcel(updatedData);
+            const url = window.URL.createObjectURL(new Blob([response]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${type}_reportExcel_${Date.now()}.xlsx`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Ошибка при скачивании Excel файла:', error);
+        }
+    }
+
+    const exportWord = async () => {
+        let data;
+        if (startDate !== '' && endDate !== '') {
+            if (sortBy) {
+                const response = await getPartSearchByDateAndSortDataService(1, total, startDate, endDate, sortBy);
+                data = response.data.data;
+            } else {
+                const response = await getPartSearchByDateDataService(1, total, startDate, endDate);
+                data = response.data.data;
+            }
+        } else {
+            if (sortBy) {
+                const response = await getPartSortedDataService(1, total, sortBy);
+                data = response.data.data;
+            } else {
+                data = await getAllService();
+            }
+        }
+        const updatedData = addFullName(data);
+        try {
+            const response = await exportService.exportWord(updatedData);
+            const url = window.URL.createObjectURL(new Blob([response]));
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `${type}_reportDocument_${Date.now()}.docx`);
+
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Ошибка при скачивании Word файла:', error);
+        }
+    }
+
+    const exportPdf = async () => {
+        let data;
+        if (startDate !== '' && endDate !== '') {
+            if (sortBy) {
+                const response = await getPartSearchByDateAndSortDataService(1, total, startDate, endDate, sortBy);
+                data = response.data.data;
+            } else {
+                const response = await getPartSearchByDateDataService(1, total, startDate, endDate);
+                data = response.data.data;
+            }
+        } else {
+            if (sortBy) {
+                const response = await getPartSortedDataService(1, total, sortBy);
+                data = response.data.data;
+            } else {
+                data = await getAllService();
+            }
+        }
+        const updatedData = addFullName(data);
+        try {
+            const response = await exportService.exportPdf(updatedData);
+            const url = window.URL.createObjectURL(new Blob([response]));
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `${type}_reportPDF_${Date.now()}.pdf`);
+
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Ошибка при скачивании PDF файла:', error);
+        }
+    }
 
     const employeeMap = employees.reduce((map, employee) => {
         map[employee.id] = employee.fullname;
@@ -203,7 +329,9 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
                         </Box>
                     </Box>
                 </Box>
-                <Box>
+                <Box sx={{
+                    textAlign: 'center'
+                }}>
                     <TableContainer component={Paper}>
                         <Table sx={{
                             minWidth: 650
@@ -265,8 +393,13 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
                         page={currentPage - 1}
                         onPageChange={handleChangePage}
                     />
+                    <Box>
+                        <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => exportExcel()}>Excel</Button>
+                        <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px', margin: "0 20px" }} onClick={() => exportPdf()}>PDF</Button>
+                        <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => exportWord()}>Word</Button>
+                        <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px', margin: "0 20px" }} onClick={() => goBack()}>Назад</Button>
+                    </Box>
                 </Box>
-
             </Box>
         </>
     );

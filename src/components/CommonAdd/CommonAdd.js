@@ -24,7 +24,7 @@ const SICKLEAVE = 'sickLeave';
 const DAYOFF = 'dayOff';
 
 
-const validationSchema = Yup.object({
+const validationSchema_1 = Yup.object({
     start_date: Yup.date()
         .required('Укажите дату начала'),
     end_date: Yup.date()
@@ -38,7 +38,18 @@ const validationSchema = Yup.object({
         .max(50, 'Тип отпуска не может содержать больше 50 символов'),
 });
 
-const CommonAdd = ({ type }) => {
+const validationSchema_2 = Yup.object({
+    start_date: Yup.date()
+        .required('Укажите дату начала'),
+    end_date: Yup.date()
+        .required('Укажите дату конца')
+        .test('end-date-after-start-date', 'Дата конца должна быть не раньше даты начала', function (value) {
+            return value >= this.parent.start_date;
+        }),
+});
+
+
+const CommonAdd = ({ action_type }) => {
     const { id } = useParams();
 
     const [open, setOpen] = useState(false);
@@ -75,15 +86,13 @@ const CommonAdd = ({ type }) => {
             notes: '',
             reason: '',
         },
-        validationSchema: validationSchema,
+        validationSchema: action_type === 'vacation' ? validationSchema_1 : validationSchema_2,
         onSubmit: async (values, { resetForm }) => {
-            console.log('click 3')
             if (imageError) {
                 return;
             }
-            console.log('click 1')
             try {
-                if (type === VACATION || type === SICKLEAVE) {
+                if (action_type === VACATION || action_type === SICKLEAVE) {
                     if (!image) {
                         setImageError("Необходимо обязательно загрузить документ");
                         return;
@@ -91,7 +100,7 @@ const CommonAdd = ({ type }) => {
                     const formData = new FormData();
                     formData.append('pdfFile', image);
                     formData.append('employee_id', id);
-                    if (type === VACATION) {
+                    if (action_type === VACATION) {
                         formData.append('document_type', 'Приказ на отпуск');
                     }
                     else {
@@ -102,27 +111,29 @@ const CommonAdd = ({ type }) => {
                     formData.append('notes', values.notes);
                     const response = await DocumentService.createDocument(formData);
                     const document_id = response.data.id;
-                    if (type === VACATION) {
+                    if (action_type === VACATION) {
                         await VacationService.createVacation({ employee_id: id, document_id: document_id, start_date: values.start_date, end_date: values.end_date, type: values.type });
                         handleActionSuccess('Отпуск успешно создан');
+                        resetForm();
                     }
                     else {
                         await SickLeaveService.createSickLeave({ employee_id: id, document_id: document_id, start_date: values.start_date, end_date: values.end_date, diagnosis: values.diagnosis });
                         handleActionSuccess('Больничный успешно создан');
+                        resetForm();
                     }
                 }
                 else {
                     await DayOffService.createDayOff({ employee_id: id, start_date: values.start_date, end_date: values.end_date, reason: values.reason });
                     handleActionSuccess('Прогул успешно создан');
+                    resetForm();
                 }
-                console.log('click')
                 setImage(null);
                 setImageError(null);
             } catch (e) {
                 console.error(e);
-                if (type === VACATION) {
+                if (action_type === VACATION) {
                     handleActionError('Ошибка при добавлении отпуска');
-                } else if (type === SICKLEAVE) {
+                } else if (action_type === SICKLEAVE) {
                     handleActionError('Ошибка при добавлении больничного листа');
                 }
                 else {
@@ -177,7 +188,7 @@ const CommonAdd = ({ type }) => {
                     boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.4)",
                     //margin: "20px auto"
                 }}>
-                {(type === VACATION || type === SICKLEAVE) && (
+                {(action_type === VACATION || action_type === SICKLEAVE) && (
                     <>
                         <Typography variant="h5" gutterBottom>
                             Добавление документа
@@ -212,9 +223,9 @@ const CommonAdd = ({ type }) => {
                     </>
                 )}
                 <Typography variant="h5" gutterBottom>
-                    {type === VACATION ? 'Добавление отпуска' :
-                        type === SICKLEAVE ? 'Добавление больничного' :
-                            type === DAYOFF ? 'Добавление прогула' :
+                    {action_type === VACATION ? 'Добавление отпуска' :
+                        action_type === SICKLEAVE ? 'Добавление больничного' :
+                            action_type === DAYOFF ? 'Добавление прогула' :
                                 'Добавление'}
                 </Typography>
                 <TextField
@@ -241,7 +252,7 @@ const CommonAdd = ({ type }) => {
                     helperText={formik.touched.end_date && formik.errors.end_date}
                     size="small"
                 />
-                {type === VACATION && (
+                {action_type === VACATION && (
                     <>
                         <TextField
                             fullWidth
@@ -257,7 +268,7 @@ const CommonAdd = ({ type }) => {
                         />
                     </>
                 )}
-                {type === SICKLEAVE && (
+                {action_type === SICKLEAVE && (
                     <>
                         <TextField
                             fullWidth
@@ -273,7 +284,7 @@ const CommonAdd = ({ type }) => {
                         />
                     </>
                 )}
-                {type === DAYOFF && (
+                {action_type === DAYOFF && (
                     <>
                         <TextField
                             fullWidth

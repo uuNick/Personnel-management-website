@@ -1,5 +1,6 @@
 import React from 'react';
 import { getPartVacations, getPartSortedVacations, updateCurrentPageForVacation, getPartSearchByDateAndSortVacations, getPartSearchByDateVacations } from '../../actions/vacationAction';
+import vacationService from '../../services/vacationsService'
 import MainTables from '../MainTables/MainTables';
 import Footer from '../Footer/Footer';
 
@@ -13,6 +14,10 @@ const VacationMain = () => {
                 updateCurrentPage={updateCurrentPageForVacation}
                 getPartSearchByDateAndSortData={getPartSearchByDateAndSortVacations}
                 getPartSearchByDateData={getPartSearchByDateVacations}
+                getAllService={vacationService.getAllVacations}
+                getPartSearchByDateDataService={vacationService.getPartSearchByDateVacations}
+                getPartSearchByDateAndSortDataService={vacationService.getPartSearchByDateAndSortVacations}
+                getPartSortedDataService={vacationService.getPartSortedVacations}
             />
             <Footer />
         </>

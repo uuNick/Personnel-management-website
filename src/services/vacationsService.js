@@ -22,7 +22,7 @@ class vacationService {
         }
     }
 
-    async getPartSortedVacations(page, limit, sortBy, order) {
+    async getPartSortedVacations(page, limit, sortBy, order = "ASC") {
         try {
             const response = await axios.get(`${hostServer}vacations/sorted?page=${page}&limit=${limit}&sortBy=${sortBy}&order=${order}`);
             if (response.status === 200) {
@@ -41,7 +41,7 @@ class vacationService {
         }
     }
 
-    async getPartSearchByDateAndSortVacations(page, limit, start_date, end_date, sortBy, order) {
+    async getPartSearchByDateAndSortVacations(page, limit, start_date, end_date, sortBy, order = "ASC") {
         try {
             const response = await axios.get(`${hostServer}vacations/search_by_date_and_sort?page=${page}&limit=${limit}&start_date=${start_date}&end_date=${end_date}&sortBy=${sortBy}&order=${order}`);
             if (response.status === 200) {
@@ -114,6 +114,45 @@ class vacationService {
                 throw new Error('Ошибка сети');
             } else {
                 throw new Error(`Произошла ошибка при создании отпуска: ${error}`);
+            }
+        }
+    }
+
+    async getAllVacations() {
+        try {
+            const response = await axios.get(`${hostServer}vacations`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                throw new Error(`Ошибка при получении отпусков: ${response.data.message || 'Неизвестная ошибка'}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при получении отпусков: ${error}`);
+            }
+        }
+    }
+
+    async deleteVacation(vacation_id) {
+        try {
+            const response = await axios.delete(`${hostServer}vacations/${vacation_id}`);
+
+            if (response.status === 204) {
+                return response;
+            } else {
+                throw new Error(`Ошибка при удалении отпуска: ${response.status}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при удалении отпуска: ${error}`);
             }
         }
     }

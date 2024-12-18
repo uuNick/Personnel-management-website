@@ -1,26 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Logo from '../../images/logo/logo.png';
 import './Main_Header.css';
 import { useNavigate, Link } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 const MANAGERROLE = 'РУКОВОДИТЕЛЬ';
 const INSPECTORROLE = 'ИНСПЕКТОР';
 
 
 const Main_Header = () => {
 
+    const [open, setOpen] = useState(false);
+
     const navigate = useNavigate();
 
-    const handleClick = () => {
+    // const handleClick = () => {
+    //     const token = localStorage.getItem('token');
+    //     if (token) {
+    //         localStorage.removeItem('token');
+    //         localStorage.removeItem('roleNames');
+    //         navigate('/login');
+    //     }
+    // }
+
+    const userRole = localStorage.getItem('roleNames') || [];
+
+    const handleModalOpen = () => {
+        setOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setOpen(false);
+    };
+
+    const handleModalConfirm = () => {
         const token = localStorage.getItem('token');
         if (token) {
             localStorage.removeItem('token');
             localStorage.removeItem('roleNames');
             navigate('/login');
         }
-    }
-
-    const userRole = localStorage.getItem('roleNames') || [];
+    };
 
     return (
         <header>
@@ -60,10 +79,22 @@ const Main_Header = () => {
                         )}
                     </nav>
                     <div className="header_buttons">
-                        <Button variant="outlined" color='primary.contrastText' onClick={handleClick}>Выйти</Button>
+                        <Button variant="outlined" color='primary.contrastText' onClick={handleModalOpen}>Выйти</Button>
                     </div>
                 </div>
             </div>
+            <Dialog open={open} onClose={handleModalClose}>
+                <DialogTitle>Подтверждение выхода</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Вы уверены, что хотите выйти из аккаунта?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleModalConfirm} color="primary.contrastText">Выйти</Button>
+                    <Button onClick={handleModalClose} color='primary.contrastText'>Отмена</Button>
+                </DialogActions>
+            </Dialog>
         </header>
     );
 };

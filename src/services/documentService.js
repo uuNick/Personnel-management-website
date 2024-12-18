@@ -66,6 +66,25 @@ class documentService {
         }
     }
 
+    async deleteDocument(document_id) {
+        try {
+            const response = await axios.delete(`${hostServer}documents/${document_id}`);
+
+            if (response.status === 204) {
+                return response;
+            } else {
+                throw new Error(`Ошибка при удалении документа: ${response.status}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при удалении документа: ${error}`);
+            }
+        }
+    }
 
 }
 

@@ -117,6 +117,45 @@ class dayOffService {
             }
         }
     }
+
+    async getAllDaysOff() {
+        try {
+            const response = await axios.get(`${hostServer}daysOff`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                throw new Error(`Ошибка при получении прогулов: ${response.data.message || 'Неизвестная ошибка'}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при получении прогулов: ${error}`);
+            }
+        }
+    }
+
+    async deleteDayOff(day_off_id) {
+        try {
+            const response = await axios.delete(`${hostServer}daysOff/${day_off_id}`);
+
+            if (response.status === 204) {
+                return response;
+            } else {
+                throw new Error(`Ошибка при удалении прогула: ${response.status}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при удалении прогула: ${error}`);
+            }
+        }
+    }
 }
 
 export default new dayOffService();

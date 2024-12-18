@@ -108,7 +108,7 @@ const DetailedInfo = () => {
             }}>
                 <Box sx = {{
                     textAlign: 'center',
-                    maxWidth: '700px',
+                    maxWidth: '750px',
                     marginBottom: "40px"
                 }}>
                     <Typography variant='h4' sx={{marginBottom: '20px'}}>Отпуска</Typography>
@@ -116,7 +116,7 @@ const DetailedInfo = () => {
                 </Box>
                 <Box sx = {{
                     textAlign: 'center',
-                    maxWidth: '700px',
+                    maxWidth: '750px',
                     marginBottom: "40px"
                 }}>
                     <Typography variant='h4' sx={{textAlign:'center', marginBottom: '20px'}}>Больничные</Typography>
@@ -124,7 +124,7 @@ const DetailedInfo = () => {
                 </Box>
                 <Box sx = {{
                     textAlign: 'center',
-                    maxWidth: '700px',
+                    maxWidth: '750px',
                     marginBottom: "40px"
                 }}>
                     <Typography variant='h4' sx={{textAlign:'center', marginBottom: '20px'}}>Прогулы</Typography>

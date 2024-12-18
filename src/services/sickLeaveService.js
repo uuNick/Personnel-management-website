@@ -22,7 +22,7 @@ class sickLeaveService {
         }
     }
 
-    async getPartSortedSickLeaves(page, limit, sortBy, order) {
+    async getPartSortedSickLeaves(page, limit, sortBy, order = "ASC") {
         try {
             const response = await axios.get(`${hostServer}sickLeaves/sorted?page=${page}&limit=${limit}&sortBy=${sortBy}&order=${order}`);
             if (response.status === 200) {
@@ -41,7 +41,7 @@ class sickLeaveService {
         }
     }
 
-    async getPartSearchByDateAndSortSickLeaves(page, limit, start_date, end_date, sortBy, order) {
+    async getPartSearchByDateAndSortSickLeaves(page, limit, start_date, end_date, sortBy, order = "ASC") {
         try {
             const response = await axios.get(`${hostServer}sickLeaves/search_by_date_and_sort?page=${page}&limit=${limit}&start_date=${start_date}&end_date=${end_date}&sortBy=${sortBy}&order=${order}`);
             if (response.status === 200) {
@@ -114,6 +114,45 @@ class sickLeaveService {
                 throw new Error('Ошибка сети');
             } else {
                 throw new Error(`Произошла ошибка при создании больничного листа: ${error}`);
+            }
+        }
+    }
+
+    async getAllSickLeaves() {
+        try {
+            const response = await axios.get(`${hostServer}sickLeaves`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                throw new Error(`Ошибка при получении больничных листов: ${response.data.message || 'Неизвестная ошибка'}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при получении больничных листов: ${error}`);
+            }
+        }
+    }
+
+    async deleteSickLeave(sickLeave_id) {
+        try {
+            const response = await axios.delete(`${hostServer}sickLeaves/${sickLeave_id}`);
+
+            if (response.status === 204) {
+                return response;
+            } else {
+                throw new Error(`Ошибка при удалении больничного: ${response.status}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при удалении больничного: ${error}`);
             }
         }
     }

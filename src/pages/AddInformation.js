@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 const AddInformation = () => {
     const { type } = useParams();
     return (
-        <CommonAdd type={type} />
+        <CommonAdd action_type={type} />
     );
 };
 

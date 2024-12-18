@@ -1,5 +1,6 @@
 import React from 'react';
 import { getPartDaysOff, getPartSortedDaysOff, updateCurrentPageForDaysOff, getPartSearchByDateAndSortDaysOff, getPartSearchByDateDaysOff } from '../../actions/dayOffActions';
+import dayOffService from '../../services/dayOffService';
 import MainTables from '../MainTables/MainTables';
 import Footer from '../Footer/Footer';
 
@@ -13,8 +14,12 @@ const DayOffMain = () => {
                 updateCurrentPage={updateCurrentPageForDaysOff}
                 getPartSearchByDateAndSortData={getPartSearchByDateAndSortDaysOff}
                 getPartSearchByDateData={getPartSearchByDateDaysOff}
+                getAllService={dayOffService.getAllDaysOff}
+                getPartSearchByDateDataService={dayOffService.getPartSearchByDateDaysOff}
+                getPartSearchByDateAndSortDataService={dayOffService.getPartSearchByDateAndSortDaysOff}
+                getPartSortedDataService={dayOffService.getPartSortedDaysOff}
             />
-            <Footer/>
+            <Footer />
         </>
     );
 };

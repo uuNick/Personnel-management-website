@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react"
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { getAllDocuments } from '../../actions/documentAction';
 import { getEmployeeById } from "../../actions/employeeAction";
 import { updateCurrentPageForSickLeave } from "../../actions/sickLeaveAction";
 import { updateCurrentPageForVacation } from "../../actions/vacationAction";
 import { updateCurrentPageForDaysOff } from "../../actions/dayOffActions";
+import documentService from '../../services/documentService';
+import vacationService from '../../services/vacationsService';
+import sickLeaveService from '../../services/sickLeaveService';
+import dayOffService from '../../services/dayOffService';
+
 import exportService from '../../services/exportService';
 import {
     Table,
@@ -19,17 +24,36 @@ import {
     TablePagination,
     Typography,
     Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    DialogContentText,
+    IconButton,
+    Alert,
+    Snackbar,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import hostServerJSON from "../../hostServer.json";
 const hostServer = hostServerJSON.localhost_path;
+const MANAGERROLE = 'РУКОВОДИТЕЛЬ';
+const INSPECTORROLE = 'ИНСПЕКТОР';
 
+
+const currentRole = localStorage.getItem('roleNames');
+
+const mapping = {
+    vacation: "отпуск",
+    sickLeave: "больничный лист",
+    dayOff: "прогул"
+}
 
 const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
 
     const dispatch = useDispatch();
     const { employee } = useSelector(state => state.employee);
     const { documents } = useSelector(state => state.documents);
-
+    const [reload, setReload] = useState(false);
     const { common_part, currentPage, totalPages, total, limit, loading, error } = useSelector(state => {
         if (type === 'vacation') {
             return state.vacation;
@@ -40,6 +64,34 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
         }
     });
 
+    const [open, setOpen] = useState(false);
+    const [documentId, setDocumentId] = useState(null);
+    const [idForDelete, setIdForDelete] = useState(null);
+
+    const [openPush, setOpenPush] = useState(false);
+    const [severity, setSeverity] = useState('success');
+    const [message, setMessage] = useState('');
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenPush(false);
+    };
+
+    const handleDeleteSuccess = (message) => {
+        setSeverity('success');
+        setMessage(message);
+        setOpenPush(true);
+    };
+
+    const handleDeleteError = (message) => {
+        setSeverity('error');
+        setMessage(message);
+        setOpenPush(true);
+    };
+
+
     useEffect(() => {
 
         dispatch(getPartSearch(currentPage, limit, employee_id));
@@ -49,7 +101,7 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
         if (documents.length === 0) {
             dispatch(getAllDocuments());
         }
-    }, [dispatch, currentPage, limit]);
+    }, [dispatch, currentPage, limit, reload]);
 
     const handleChangePage = (event, newPage) => {
         if (type === 'vacation') {
@@ -139,6 +191,53 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
             return map;
         }, {});
     }
+    const handleModalOpen = (item) => {
+        setDocumentId(item.document_id);
+        setIdForDelete(item.id);
+        setOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setDocumentId(null);
+        setIdForDelete(null);
+        setOpen(false);
+    };
+
+    const handleModalConfirm = async () => {
+        if (type === 'vacation') {
+            try {
+                await documentService.deleteDocument(documentId);
+                //await vacationService.deleteVacation(idForDelete);
+                handleDeleteSuccess("Отпуск был успешно удалён");
+            } catch (e) {
+                console.log(e);
+                handleDeleteError("Ошибка при удалении отпуска");
+            }
+        } else if (type === 'sickLeave') {
+            try {
+                await documentService.deleteDocument(documentId);
+                //await sickLeaveService.deleteSickLeave(idForDelete);
+                handleDeleteSuccess("Больничный лист был успешно удалён");
+            } catch (e) {
+                console.log(e);
+                handleDeleteError("Ошибка при удалении больничного листа");
+            }
+        }
+        else {
+            try {
+                await dayOffService.deleteDayOff(idForDelete);
+                handleDeleteSuccess("Прогул был успешно удалён");
+            } catch (e) {
+                console.log(e);
+                handleDeleteError("Ошибка при удалении прогула");
+            }
+        }
+        setOpen(false);
+        setDocumentId(null);
+        setIdForDelete(null);
+        setReload(!reload)
+    };
+
 
 
 
@@ -154,7 +253,7 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
                         <Box>
                             <TableContainer component={Paper}>
                                 <Table sx={{
-                                    minWidth: 650
+                                    minWidth: 750
                                 }} aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
@@ -173,6 +272,11 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
                                                     return 'Причина';
                                                 })()
                                             }</TableCell>
+                                            {currentRole === INSPECTORROLE && (
+                                                <TableCell align="center" sx={{ padding: "5px" }}>
+                                                    Удаление
+                                                </TableCell>
+                                            )}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -200,6 +304,13 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
                                                         return item.reason || 'нет данных';
                                                     })()}
                                                 </TableCell>
+                                                {currentRole === INSPECTORROLE && (
+                                                    <TableCell align="center" sx={{ cursor: 'pointer' }}>
+                                                        <IconButton color="primary.contrastText" sx={{ p: '0' }} aria-label="clear" onClick={() => handleModalOpen(item)}>
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                    </TableCell>
+                                                )}
                                             </TableRow>
                                         ))}
                                     </TableBody>
@@ -224,6 +335,23 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
                     </Box>
                 )
             }
+            <Dialog open={open} onClose={handleModalClose}>
+                <DialogTitle>Подтверждение выхода</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Вы уверены, что хотите удалить {mapping[type]}?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleModalConfirm} color="error">Удалить</Button>
+                    <Button onClick={handleModalClose} color='primary.contrastText'>Отмена</Button>
+                </DialogActions>
+            </Dialog>
+            <Snackbar open={openPush} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+                    {message}
+                </Alert>
+            </Snackbar>
         </>
     )
 }
