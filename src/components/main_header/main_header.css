@@ -5,6 +5,8 @@ header {
     z-index: 10;
     box-shadow: 0 3px 12px rgba(18, 18, 18, .06);
     background-color: var(--bg-color);
+    max-width: 1440px;
+    margin: 0 auto;
 }
 
 .header_wrapper {
@@ -19,6 +21,7 @@ header {
 
 .body_menu{
     display: flex;
+    margin-right: 10px;
 }
 
 .menu_list {

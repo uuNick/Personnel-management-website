@@ -17,8 +17,9 @@ import {
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
 import "./Auth.css";
+const INSPECTORROLE = 'ИНСПЕКТОР';
+const MANAGERROLE = 'РУКОВОДИТЕЛЬ';
 
 YupPassword(Yup);
 
@@ -50,7 +51,13 @@ const Login = () => {
                 setUsernameError('');
                 localStorage.setItem('roleNames', response.roleNames);
                 localStorage.setItem('token', response.token);
-                navigate('/manager');
+                
+                if(response.roleNames.includes(INSPECTORROLE)){
+                    navigate('/inspector')
+                }
+                else{
+                    navigate('/manager');
+                }
                 resetForm();
             } catch (e) {
                 if (e.message.includes("неверный")) {

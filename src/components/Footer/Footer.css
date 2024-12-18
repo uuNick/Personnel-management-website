@@ -3,7 +3,9 @@
     padding: 30px 0px;
     font-family: 'Play', sans-serif;
     text-align: center;
-    font-size: 1.6em;
+    font-size: 2em;
+    max-width: 1440px;
+    margin: 0 auto;
 }
 
 .footer .row {

@@ -97,6 +97,26 @@ class vacationService {
             }
         }
     }
+
+    async createVacation(data) {
+        try {
+            const response = await axios.post(`${hostServer}vacations/`, data);
+
+            if (response.status === 201) {
+                return response;
+            } else {
+                throw new Error(`Ошибка при создании отпуска: ${response.status}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при создании отпуска: ${error}`);
+            }
+        }
+    }
 }
 
 export default new vacationService();

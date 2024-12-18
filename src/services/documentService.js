@@ -10,7 +10,7 @@ class documentService {
                 return response;
             } else if (response.status === 404) {
                 throw new Error('Документ с указанным ID не найден');
-            } 
+            }
             else {
                 throw new Error(`Ошибка при получении документа: ${response.data.message || 'Неизвестная ошибка'}`);
             }
@@ -40,6 +40,28 @@ class documentService {
                 throw new Error('Ошибка сети');
             } else {
                 throw new Error(`Произошла ошибка при документов: ${error}`);
+            }
+        }
+    }
+
+    async createDocument(formData) {
+        try {
+            const response = await axios.post(`${hostServer}documents/`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+
+            if (response.status === 201) {
+                return response;
+            } else {
+                throw new Error(`Ошибка при создании работника: ${response.status}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при создании работника: ${error}`);
             }
         }
     }

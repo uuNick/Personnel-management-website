@@ -97,6 +97,26 @@ class dayOffService {
             }
         }
     }
+
+    async createDayOff(data) {
+        try {
+            const response = await axios.post(`${hostServer}daysOff/`, data);
+
+            if (response.status === 201) {
+                return response;
+            } else {
+                throw new Error(`Ошибка при создании прогула: ${response.status}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при создании прогула: ${error}`);
+            }
+        }
+    }
 }
 
 export default new dayOffService();

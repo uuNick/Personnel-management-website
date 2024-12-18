@@ -1,10 +1,26 @@
 import React from 'react';
 import Logo from '../../images/logo/logo.png';
 import './Main_Header.css';
+import { useNavigate, Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
+const MANAGERROLE = 'РУКОВОДИТЕЛЬ';
+const INSPECTORROLE = 'ИНСПЕКТОР';
+
 
 const Main_Header = () => {
 
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('roleNames');
+            navigate('/login');
+        }
+    }
+
+    const userRole = localStorage.getItem('roleNames') || [];
 
     return (
         <header>
@@ -19,18 +35,33 @@ const Main_Header = () => {
                 </div>
                 <div className="menu">
                     <nav className='body_menu'>
-                        <ul className="menu_list">
-                            <li className='menu_item'>
-                                <a href="#" className="menu_link">Отдел кадров</a>
-                            </li>
-                            <li className="menu_item">
-                                <a href="#" className="menu_link">Руководитель предприятия</a>
-                            </li>
-                        </ul>
+                        {userRole === INSPECTORROLE && (
+                            <ul className="menu_list">
+                                <li className='menu_item'>
+                                    <Link to="/vacations" className="menu_link">Отпуска</Link>
+                                </li>
+                                <li className="menu_item">
+                                    <Link to="/sickLeaves" className="menu_link">Больничные</Link>
+                                </li>
+                                <li className="menu_item">
+                                    <Link to="/daysOff" className="menu_link">Прогулы</Link>
+                                </li>
+                            </ul>
+                        )}
+                        {userRole === MANAGERROLE && (
+                            <ul className="menu_list">
+                                <li className='menu_item'>
+                                    <Link to="/documents" className="menu_link">Документы</Link>
+                                </li>
+                                <li className="menu_item">
+                                    <Link to="/dataChanges" className="menu_link">Изменение данных</Link>
+                                </li>
+                            </ul>
+                        )}
                     </nav>
-                    {/* <div className="header_buttons">
-                        <Button variant="outlined" color='primary.contrastText'>Войти</Button>
-                    </div> */}
+                    <div className="header_buttons">
+                        <Button variant="outlined" color='primary.contrastText' onClick={handleClick}>Выйти</Button>
+                    </div>
                 </div>
             </div>
         </header>

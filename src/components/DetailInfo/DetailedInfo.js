@@ -135,6 +135,7 @@ const DetailedInfo = () => {
             <Box sx={{
                 display: "flex",
                 justifyContent: "center",
+                marginBottom: "40px"
 
             }}>
                 <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => goBack()}>Назад</Button>

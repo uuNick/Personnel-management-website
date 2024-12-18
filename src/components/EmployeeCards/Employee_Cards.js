@@ -32,16 +32,20 @@ import noPhoto from '../../images/no_photo.jpg';
 import Numeration from '../Numeration/Numeration';
 import hostServerJSON from "../../hostServer.json";
 const hostServer = hostServerJSON.localhost_path;
-
+const MANAGERROLE = "РУКОВОДИТЕЛЬ";
+const INSPECTORROLE = "ИНСПЕКТОР";
 
 const Employee_Cards = () => {
   const dispatch = useDispatch();
   const { employees, part_employees, currentPage, totalPages, limit, loading, error } = useSelector(state => state.employee);
   const [open, setOpen] = useState(false);
-  const [EmployeeToDelete, setEmployeeToDelete] = useState(null);
+  const [choosenEmployee, setchoosenEmployee] = useState(null);
+  const [choice, setChoice] = useState(null);
   const [sortBy, setSortBy] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [inputSearch, setInputSearch] = useState('');
+  const currentRole = localStorage.getItem('roleNames');
+
 
   const fetchEmployees = (page, limit) => {
     if (searchQuery.trim() !== '' && sortBy !== '') {
@@ -102,24 +106,37 @@ const Employee_Cards = () => {
     navigate("/addEmployee");
   }
 
+  const goToAddVacation = (item) => {
+    navigate(`/addInf/vacation/${item.id}`, {state: item});
+  }
+
+  const goToAddSickLeave = (item) => {
+    navigate(`/addInf/sickLeave/${item.id}`, {state: item});
+  }
+
+  const goToAddDayOff = (item) => {
+    navigate(`/addInf/dayOff/${item.id}`, {state: item});
+  }
+
   const handleEdit = (item) => {
     navigate(`/editEmployee/${item.id}`, { state: item });
   };
 
-  const handleDeleteOpen = (item) => {
+  const handleModalOpen = (item, type) => {
     setOpen(true);
-    setEmployeeToDelete(item);
+    setChoice(type);
+    setchoosenEmployee(item);
   };
 
-  const handleDeleteClose = () => {
+  const handleModalClose = () => {
     setOpen(false);
-    setEmployeeToDelete(null);
+    setChoice(null);
+    setchoosenEmployee(null);
   };
 
-  const handleDeleteConfirm = () => {
-    if (EmployeeToDelete) {
-      //dispatch(deleteBuyer(buyerToDelete.buyer_id));
-      handleDeleteClose();
+  const handleModalConfirm = () => {
+    if (choosenEmployee) {
+      handleModalClose();
     }
   };
 
@@ -189,19 +206,41 @@ const Employee_Cards = () => {
                   <Typography variant="h5" sx={{ color: 'text.secondary' }}>
                     {item.position}
                   </Typography>
-                  {/* <Typography variant="body2" sx={{ color: 'text.primary', marginTop: "20px" }}>
-                    {item.email}
-                  </Typography > */}
                 </CardContent>
-                <CardActions sx={{justifyContent: "space-between"}}>
-                  <Button size="small" color='primary.contrastText' sx={{fontSize: '14px'}} onClick={() => handleEdit(item)}>Редактировать</Button>
-                  <Button size="small" color='primary.contrastText' sx={{fontSize: '14px'}} onClick={() => handleDeleteOpen(item)} >Удалить</Button>
+                <CardActions sx={{ justifyContent: "center" }}>
+                  {currentRole === MANAGERROLE && (
+                    <>
+                      <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => handleEdit(item)}>
+                        Редактировать
+                      </Button>
+                      {/* <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => handleDeleteOpen(item)}>
+                        Удалить
+                      </Button> */}
+                    </>
+                  )}
+                  {currentRole === INSPECTORROLE && (
+                    <>
+                      <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => goToAddVacation(item)}>
+                        Отпуск
+                      </Button>
+                      <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => goToAddSickLeave(item)}>
+                        Больничный
+                      </Button>
+                      <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => goToAddDayOff(item)}>
+                        Прогул
+                      </Button>
+                    </>
+                  )}
                 </CardActions>
               </Card>
             ))}
           </div>
           <Numeration totalPages={totalPages} currentPage={currentPage} handlePageChange={handlePageChange} />
-          <Button onClick={goToAddEmployee} color='primary.contrastText' sx={{ marginBottom: "50px" }}>Добавить работника</Button>
+          {currentRole === MANAGERROLE && (
+            <Button onClick={goToAddEmployee} color='primary.contrastText' sx={{ marginBottom: "50px" }}>
+              Добавить работника
+            </Button>
+          )}
           {/* <Dialog open={open} onClose={handleDeleteClose}>
             <DialogTitle>Подтверждение удаления</DialogTitle>
             <DialogContent>
@@ -212,6 +251,13 @@ const Employee_Cards = () => {
             <DialogActions>
               <Button onClick={handleDeleteClose} color='primary.contrastText'>Отмена</Button>
               <Button onClick={handleDeleteConfirm} color="error">Удалить</Button>
+            </DialogActions>
+          </Dialog> */}
+          {/* <Dialog open={open} onClose={handleModalClose}>
+            <DialogTitle>Выберите дейтсвие</DialogTitle>
+            <DialogActions>
+              <Button onClick={goToAdd} color='primary.contrastText'>Добавить</Button>
+              <Button onClick={handleDeleteConfirm} color="error">Редактировать</Button>
             </DialogActions>
           </Dialog> */}
         </div>

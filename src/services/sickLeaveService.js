@@ -97,6 +97,26 @@ class sickLeaveService {
             }
         }
     }
+
+    async createSickLeave(data) {
+        try {
+            const response = await axios.post(`${hostServer}sickLeaves/`, data);
+
+            if (response.status === 201) {
+                return response;
+            } else {
+                throw new Error(`Ошибка при создании больничного листа: ${response.status}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при создании больничного листа: ${error}`);
+            }
+        }
+    }
 }
 
 export default new sickLeaveService();
