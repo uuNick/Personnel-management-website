@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getEmployeeById } from '../../actions/employeeAction';
 import { useSelector, useDispatch } from 'react-redux';
 import TableForEmployee from "../TableForEmployee/TableForEmployee";
+import CalendarComponent from '../Calendar/Calendar';
 import { getPartSearchByEmployeeIdSickLeaves } from '../../actions/sickLeaveAction';
 import { getPartSearchByEmployeeIdVacations } from '../../actions/vacationAction';
 import { getPartSearchByEmployeeIdDaysOff } from '../../actions/dayOffActions';
@@ -23,9 +24,10 @@ const DetailedInfo = () => {
 
     const dispatch = useDispatch();
     const { employee, loading, error } = useSelector(state => state.employee);
-
+    const [calendarKey, setCalendarKey] = useState(0);
     useEffect(() => {
         dispatch(getEmployeeById(id));
+        setCalendarKey(calendarKey + 1);
     }, [dispatch]);
 
     const navigate = useNavigate()
@@ -33,6 +35,10 @@ const DetailedInfo = () => {
     const goBack = () => {
         navigate("/manager");
     }
+
+    const handleEventsChange = () => {
+        setCalendarKey(calendarKey + 1);
+    };
 
     if (loading) {
         return <Box display="flex" justifyContent="center" alignItems="center" height="100vh"><CircularProgress /></Box>; // Индикатор загрузки
@@ -106,31 +112,38 @@ const DetailedInfo = () => {
                 flexDirection: 'column',
                 flexWrap: 'wrap',
             }}>
-                <Box sx = {{
+                <Box sx={{
                     textAlign: 'center',
                     maxWidth: '750px',
                     marginBottom: "40px"
                 }}>
-                    <Typography variant='h4' sx={{marginBottom: '20px'}}>Отпуска</Typography>
-                    <TableForEmployee type={'vacation'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdVacations} />
+                    <Typography variant='h4' sx={{ marginBottom: '20px' }}>Отпуска</Typography>
+                    <TableForEmployee type={'vacation'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdVacations} onEventsChange={handleEventsChange} />
                 </Box>
-                <Box sx = {{
+                <Box sx={{
                     textAlign: 'center',
                     maxWidth: '750px',
                     marginBottom: "40px"
                 }}>
-                    <Typography variant='h4' sx={{textAlign:'center', marginBottom: '20px'}}>Больничные</Typography>
-                    <TableForEmployee type={'sickLeave'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdSickLeaves} />
+                    <Typography variant='h4' sx={{ textAlign: 'center', marginBottom: '20px' }}>Больничные</Typography>
+                    <TableForEmployee type={'sickLeave'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdSickLeaves} onEventsChange={handleEventsChange}/>
                 </Box>
-                <Box sx = {{
+                <Box sx={{
                     textAlign: 'center',
                     maxWidth: '750px',
                     marginBottom: "40px"
                 }}>
-                    <Typography variant='h4' sx={{textAlign:'center', marginBottom: '20px'}}>Прогулы</Typography>
-                    <TableForEmployee type={'dayOff'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdDaysOff} />
+                    <Typography variant='h4' sx={{ textAlign: 'center', marginBottom: '20px' }}>Прогулы</Typography>
+                    <TableForEmployee type={'dayOff'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdDaysOff} onEventsChange={handleEventsChange} />
                 </Box>
 
+            </Box>
+            <Box sx={{
+                maxWidth: '1440px',
+                margin: '30px auto',
+                padding: '30px 0'
+            }}>
+                <CalendarComponent employeeId={id} key={calendarKey} />
             </Box>
             <Box sx={{
                 display: "flex",

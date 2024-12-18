@@ -98,6 +98,25 @@ class dayOffService {
         }
     }
 
+    async getAllSearchByEmployeeIdDaysOff(employee_id) {
+        try {
+            const response = await axios.get(`${hostServer}daysOff/search_all_by_emp_id?employee_id=${employee_id}`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                throw new Error(`Ошибка при получении прогулов: ${response.data.message || 'Неизвестная ошибка'}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при получении прогулов: ${error}`);
+            }
+        }
+    }
+
     async createDayOff(data) {
         try {
             const response = await axios.post(`${hostServer}daysOff/`, data);

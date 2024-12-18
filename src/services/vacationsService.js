@@ -98,6 +98,25 @@ class vacationService {
         }
     }
 
+    async getAllSearchByEmployeeIdVacations(employee_id) {
+        try {
+            const response = await axios.get(`${hostServer}vacations/search_all_by_emp_id?employee_id=${employee_id}`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                throw new Error(`Ошибка при получении отпусков: ${response.data.message || 'Неизвестная ошибка'}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Произошла ошибка при получении отпусков: ${error}`);
+            }
+        }
+    }
+
     async createVacation(data) {
         try {
             const response = await axios.post(`${hostServer}vacations/`, data);

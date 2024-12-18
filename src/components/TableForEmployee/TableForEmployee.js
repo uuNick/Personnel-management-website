@@ -48,7 +48,7 @@ const mapping = {
     dayOff: "прогул"
 }
 
-const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
+const TableForEmployee = ({ type, employee_id, getPartSearch, onEventsChange}) => {
 
     const dispatch = useDispatch();
     const { employee } = useSelector(state => state.employee);
@@ -232,6 +232,7 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, }) => {
                 handleDeleteError("Ошибка при удалении прогула");
             }
         }
+        onEventsChange();
         setOpen(false);
         setDocumentId(null);
         setIdForDelete(null);
