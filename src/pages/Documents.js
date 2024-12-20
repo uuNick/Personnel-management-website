@@ -1,16 +1,16 @@
 import React from 'react';
 import Main_header from '../components/Main_Header/Main_Header';
-import EmployeeCards from '../components/EmployeeCards/Employee_Cards';
+import DocumentMain from '../components/DocumentMain/DocumentMain';
 import Footer from '../components/Footer/Footer';
 
-const Inspector = () => {
+const Documents = () => {
   return (
     <>
       <Main_header />
-      <EmployeeCards/>
+      <DocumentMain/>
       <Footer/>
     </>
   );
 };
 
-export default Inspector;
+export default Documents;

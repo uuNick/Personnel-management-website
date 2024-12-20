@@ -35,7 +35,7 @@ const hostServer = hostServerJSON.localhost_path;
 const MANAGERROLE = "РУКОВОДИТЕЛЬ";
 const INSPECTORROLE = "ИНСПЕКТОР";
 
-const Employee_Cards = () => {
+const Employee_Cards = (type) => {
   const dispatch = useDispatch();
   const { employees, part_employees, currentPage, totalPages, limit, loading, error } = useSelector(state => state.employee);
   const [open, setOpen] = useState(false);
@@ -208,7 +208,7 @@ const Employee_Cards = () => {
                   </Typography>
                 </CardContent>
                 <CardActions sx={{ justifyContent: "center" }}>
-                  {currentRole === MANAGERROLE && (
+                  {(currentRole === MANAGERROLE && type !== 'document') && (
                     <>
                       <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => handleEdit(item)}>
                         Редактировать
@@ -218,6 +218,16 @@ const Employee_Cards = () => {
                       </Button> */}
                     </>
                   )}
+                  {/* {(currentRole === MANAGERROLE && type === 'document') && (
+                    <>
+                      <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => handleEdit(item)}>
+                        Увольнение
+                      </Button>
+                      <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => handleDeleteOpen(item)}>
+                        Отпуск
+                      </Button>
+                    </>
+                  )} */}
                   {currentRole === INSPECTORROLE && (
                     <>
                       <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => goToAddVacation(item)}>
@@ -254,7 +264,7 @@ const Employee_Cards = () => {
             </DialogActions>
           </Dialog> */}
           {/* <Dialog open={open} onClose={handleModalClose}>
-            <DialogTitle>Выберите дейтсвие</DialogTitle>
+            <DialogTitle>Введите данные</DialogTitle>
             <DialogActions>
               <Button onClick={goToAdd} color='primary.contrastText'>Добавить</Button>
               <Button onClick={handleDeleteConfirm} color="error">Редактировать</Button>

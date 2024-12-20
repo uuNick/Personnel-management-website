@@ -3,7 +3,7 @@ import Main_header from '../components/Main_Header/Main_Header';
 import EmployeeCards from '../components/EmployeeCards/Employee_Cards';
 import Footer from '../components/Footer/Footer';
 
-const Manager = () => {
+const PersonnelDepartment = () => {
   return (
     <>
       <Main_header />
@@ -13,4 +13,4 @@ const Manager = () => {
   );
 };
 
-export default Manager;
+export default PersonnelDepartment;

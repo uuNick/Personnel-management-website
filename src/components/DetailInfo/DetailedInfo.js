@@ -140,7 +140,7 @@ const DetailedInfo = () => {
             </Box>
             <Box sx={{
                 maxWidth: '1440px',
-                margin: '30px auto',
+                margin: '10px auto',
                 padding: '30px 0'
             }}>
                 <CalendarComponent employeeId={id} key={calendarKey} />
