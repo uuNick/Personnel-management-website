@@ -24,9 +24,9 @@ class exportService {
         }
     }
 
-    async exportWord(data) {
+    async exportWord(data, name) {
         try {
-            const response = await axios.post(`${hostServer}word/generate`, data, {
+            const response = await axios.post(`${hostServer}word/generate`, {data: data, name: name} , {
                 responseType: 'blob',
             });
             if (response.status === 200) {
@@ -44,9 +44,9 @@ class exportService {
             }
         }
     }
-    async exportPdf(data) {
+    async exportPdf(data, name) {
         try {
-            const response = await axios.post(`${hostServer}pdf/generate`, data, {
+            const response = await axios.post(`${hostServer}pdf/generate`, {data: data, name: name}, {
                 responseType: 'blob',
             });
             if (response.status === 200) {

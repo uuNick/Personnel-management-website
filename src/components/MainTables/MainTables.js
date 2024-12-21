@@ -34,8 +34,10 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
             return state.vacation;
         } else if (type === 'sickLeave') {
             return state.sickLeave;
-        } else {
+        } else if (type === 'dayOff') {
             return state.dayOff;
+        } else {
+            return state.dataChange;
         }
     });
 
@@ -103,7 +105,7 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
         if (employees.length === 0) {
             dispatch(getAllEmployees());
         }
-        if (documents.length === 0){
+        if (documents.length === 0) {
             dispatch(getAllDocuments());
         }
     }, [dispatch, currentPage, limit, sortBy]);
@@ -141,7 +143,7 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
     const navigate = useNavigate();
 
     const goBack = () => {
-        navigate('/inspector')
+        navigate('/personnelDepartment')
     }
 
     const addFullName = (data) => {
@@ -206,9 +208,19 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
                 data = await getAllService();
             }
         }
+        let name;
+        if (type === 'vacation') {
+            name = `Отпуска сотрудников`;
+        } else if (type === 'sickLeave') {
+            name = `Больничные сотрудников`;
+        } else if (type === 'dayOff') {
+            name = `Прогулы сотрудников`;
+        } else {
+            name = "Изменение данных"
+        }
         const updatedData = addFullName(data);
         try {
-            const response = await exportService.exportWord(updatedData);
+            const response = await exportService.exportWord(updatedData, name);
             const url = window.URL.createObjectURL(new Blob([response]));
 
             const link = document.createElement('a');
@@ -243,9 +255,19 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
                 data = await getAllService();
             }
         }
+        let name;
+        if (type === 'vacation') {
+            name = `Отпуска сотрудников`;
+        } else if (type === 'sickLeave') {
+            name = `Больничные сотрудников`;
+        } else if (type === 'dayOff') {
+            name = `Прогулы сотрудников`;
+        } else {
+            name = "Изменение данных"
+        }
         const updatedData = addFullName(data);
         try {
-            const response = await exportService.exportPdf(updatedData);
+            const response = await exportService.exportPdf(updatedData, name);
             const url = window.URL.createObjectURL(new Blob([response]));
 
             const link = document.createElement('a');
@@ -268,7 +290,7 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
     }, {});
 
     let documentMap = {};
-    if (type !== 'dayOff') {
+    if (type !== 'dayOff' && type !== 'dataChange') {
         documentMap = documents.reduce((map, document) => {
             map[document.id] = document.imageUrl;
             return map;
@@ -344,13 +366,24 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
                                             Документ ID
                                         </TableCell>
                                     )}
-                                    <TableCell key={'start_date'} align="center" onClick={() => handleSort('start_date')} sx={{ cursor: 'pointer' }} >Начало</TableCell>
-                                    <TableCell key={'end_date'} align="center" onClick={() => handleSort('end_date')} sx={{ cursor: 'pointer' }} >Конец</TableCell>
+                                    {['vacation', 'sickLeave', 'dayOff'].includes(type) && (
+                                        <>
+                                            <TableCell key={'start_date'} align="center" onClick={() => handleSort('start_date')} sx={{ cursor: 'pointer' }} >Начало</TableCell>
+                                            <TableCell key={'end_date'} align="center" onClick={() => handleSort('end_date')} sx={{ cursor: 'pointer' }} >Конец</TableCell>
+                                        </>
+                                    )}
+                                    {type === 'dataChange' && (
+                                        <>
+                                            <TableCell key={'user_id'} align="center" onClick={() => handleSort('user_id')} sx={{ cursor: 'pointer' }} >ID пользователя</TableCell>
+                                            <TableCell key={'date_of_change'} align="center" onClick={() => handleSort('date_of_change')} sx={{ cursor: 'pointer' }} >Дата изменения</TableCell>
+                                        </>
+                                    )}
                                     <TableCell align="center">{
                                         (() => {
                                             if (type === 'vacation') return 'Тип отпуска';
                                             if (type === 'sickLeave') return 'Диагноз';
-                                            return 'Причина';
+                                            if (type === 'dayOff') return 'Причина';
+                                            return 'Тип изменения';
                                         })()
                                     }</TableCell>
                                 </TableRow>
@@ -371,13 +404,24 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
                                                 </Link>
                                             </TableCell>
                                         )}
-                                        <TableCell align="center">{item.start_date}</TableCell>
-                                        <TableCell align="center">{item.end_date}</TableCell>
+                                        {['vacation', 'sickLeave', 'dayOff'].includes(type) && (
+                                            <>
+                                                <TableCell align="center">{item.start_date}</TableCell>
+                                                <TableCell align="center">{item.end_date}</TableCell>
+                                            </>
+                                        )}
+                                        {type === 'dataChange' && (
+                                            <>
+                                                <TableCell align="center" >{item.user_id}</TableCell>
+                                                <TableCell align="center" >{item.date_of_change}</TableCell>
+                                            </>
+                                        )}
                                         <TableCell align="center">
                                             {(() => {
                                                 if (type === 'vacation') return item.type || 'нет данных';
                                                 if (type === 'sickLeave') return item.diagnosis || 'нет данных';
-                                                return item.reason || 'нет данных';
+                                                if (type === 'dayOff') return item.reason || 'нет данных';
+                                                return item.type_of_change || 'Неизвестно';
                                             })()}
                                         </TableCell>
                                     </TableRow>

@@ -14,6 +14,7 @@ import DaysOff from "./pages/DaysOff";
 import AddInformation from "./pages/AddInformation";
 import Documents from "./pages/Documents";
 import PersonnelDepartment from "./pages/PersonnelDepartment";
+import DataChanges from "./pages/DataChanges";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/daysOff" element={<DaysOff />} />
           <Route path="/personnelDepartment" element={<PersonnelDepartment/>}/>
           <Route path="/documents" element={<Documents/>}/>
+          <Route path="/dataChanges" element={<DataChanges/>}/>
           <Route path="*" element={<NotFound404 />} />
         </Routes>
       </BrowserRouter>

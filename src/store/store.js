@@ -4,6 +4,7 @@ import sickLeaveSlice from './slices/sickLeaveSlice';
 import documentSlice from './slices/documentSlice';
 import vacationSlice from './slices/vacationSlice';
 import dayOffSlice from './slices/dayOffSlice';
+import dataChangeSlice from './slices/dataChangeSlice';
 
 const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
         documents: documentSlice,
         vacation: vacationSlice,
         dayOff: dayOffSlice,
+        dataChange: dataChangeSlice,
     },
 });
 

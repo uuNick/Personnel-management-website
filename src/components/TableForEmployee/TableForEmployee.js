@@ -48,7 +48,7 @@ const mapping = {
     dayOff: "прогул"
 }
 
-const TableForEmployee = ({ type, employee_id, getPartSearch, onEventsChange}) => {
+const TableForEmployee = ({ type, employee_id, getPartSearch, onEventsChange }) => {
 
     const dispatch = useDispatch();
     const { employee } = useSelector(state => state.employee);
@@ -136,7 +136,7 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, onEventsChange}) =
             const url = window.URL.createObjectURL(new Blob([response]));
             const a = document.createElement('a');
             a.href = url;
-            a.download = `report_${employee.id}.xlsx`;
+            a.download = `${type}_reportExcel_${Date.now()}.xlsx`;
             a.click();
             window.URL.revokeObjectURL(url);
         } catch (error) {
@@ -145,14 +145,22 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, onEventsChange}) =
     }
 
     const exportWord = async (data) => {
+        let name;
+        if (type === 'vacation') {
+            name = `Отпуска сотрудника ${employee_id}`;
+        } else if (type === 'sickLeave') {
+            name = `Больничные сотрудника ${employee_id}`;
+        } else {
+            name = `Прогулы сотрудника ${employee_id}`;
+        }
         const updatedData = addFullName(data);
         try {
-            const response = await exportService.exportWord(updatedData);
+            const response = await exportService.exportWord(updatedData, name);
             const url = window.URL.createObjectURL(new Blob([response]));
 
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `document_${employee_id}.docx`);
+            link.setAttribute('download', `${type}_reportDocument_${Date.now()}.docx`);
 
             document.body.appendChild(link);
             link.click();
@@ -165,14 +173,22 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, onEventsChange}) =
     }
 
     const exportPdf = async (data) => {
+        let name;
+        if (type === 'vacation') {
+            name = `Отпуска сотрудника ${employee_id}`;
+        } else if (type === 'sickLeave') {
+            name = `Больничные сотрудника ${employee_id}`;
+        } else {
+            name = `Прогулы сотрудника ${employee_id}`;
+        }
         const updatedData = addFullName(data);
         try {
-            const response = await exportService.exportPdf(updatedData);
+            const response = await exportService.exportPdf(updatedData, name);
             const url = window.URL.createObjectURL(new Blob([response]));
 
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `Report_${employee_id}.pdf`);
+            link.setAttribute('download', `${type}_reportPDF_${Date.now()}.pdf`);
 
             document.body.appendChild(link);
             link.click();

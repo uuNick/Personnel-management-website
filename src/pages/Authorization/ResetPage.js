@@ -97,7 +97,7 @@ const Registration = () => {
                     borderRadius: '20px'
                 }}>
                 <Typography variant="h5" gutterBottom>
-                    Код восстановления
+                    Получение ссылки
                 </Typography>
                 <TextField
                     fullWidth
@@ -121,7 +121,7 @@ const Registration = () => {
                     color="primary.contrastText"
                     sx={{ marginTop: "10px", marginBottom: "20px" }}
                 >
-                    Отправить код восстановления
+                    Отправить ссылку
                 </Button>
             </Box>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

@@ -53,10 +53,10 @@ const Login = () => {
                 localStorage.setItem('token', response.token);
                 
                 if(response.roleNames.includes(INSPECTORROLE)){
-                    navigate('/inspector')
+                    navigate('/personnelDepartment')
                 }
                 else{
-                    navigate('/manager');
+                    navigate('/personnelDepartment');
                 }
                 resetForm();
             } catch (e) {

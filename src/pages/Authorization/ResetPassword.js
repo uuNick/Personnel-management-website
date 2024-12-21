@@ -54,12 +54,11 @@ const Registration = () => {
         validationSchema: validationSchema,
         onSubmit: async (values, { resetForm }) => {
             try {
-                //const urlSearchParams = new URLSearchParams(window.location.search); //Bad practice
-                //const params = Object.fromEntries(urlSearchParams.entries());
-                //const token = params.token
-                //const response = await resetPassword(token, values);
-                //console.log(response);
-                //navigate('/login');
+                const urlSearchParams = new URLSearchParams(window.location.search); //Bad practice
+                const params = Object.fromEntries(urlSearchParams.entries());
+                const token = params.token
+                const response = await resetPassword(token, values);
+                navigate('/login');
                 resetForm();
             } catch (e) {
                 if (e.message.includes("просрочен")) {
