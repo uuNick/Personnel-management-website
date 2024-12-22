@@ -1,5 +1,7 @@
 .buttons {
-    margin-bottom: 50px;
+    display: flex;
+    text-align: center;
+    align-items: center;
 }
 
 .buttons span {
@@ -8,4 +10,12 @@
     font-size: 1.6em;
     line-height: 18px;
     margin: 0 20px;
+}
+
+@media (max-width: 768px) {
+
+    .buttons span{
+        font-size: 1.2em;
+        margin: 0 5px;
+    }
 }

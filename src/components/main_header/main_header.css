@@ -70,7 +70,7 @@ header {
 .menu_link {
     text-decoration: none;
     color: var(--text-color);
-    font-size: 1.6em;
+    font-size: 1rem;
     line-height: 18px;
     font-weight: 500;
 }
@@ -81,16 +81,21 @@ header {
     flex-wrap: wrap;
 }
 
-.burger_menu{
+.hidden_menu{
     display: none;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
+
+    .body_menu{
+        flex-direction: row;
+    }
+
     .menu{
         display: none;
     }
     
-    .burger_menu{
+    .hidden_menu{
         display: block;
     }
 }

@@ -14,11 +14,6 @@ import {
   IconButton,
   CardActions,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  DialogContentText,
   FormControl,
   FormLabel,
   RadioGroup,
@@ -29,13 +24,14 @@ import {
   Divider
 } from '@mui/material';
 import noPhoto from '../../images/no_photo.jpg';
+import Modal from '../MyModal/MyModal';
 import Numeration from '../Numeration/Numeration';
 import hostServerJSON from "../../hostServer.json";
 const hostServer = hostServerJSON.localhost_path;
 const MANAGERROLE = "РУКОВОДИТЕЛЬ";
 const INSPECTORROLE = "ИНСПЕКТОР";
 
-const Employee_Cards = (type) => {
+const Employee_Cards = ({ type }) => {
   const dispatch = useDispatch();
   const { employees, part_employees, currentPage, totalPages, limit, loading, error } = useSelector(state => state.employee);
   const [open, setOpen] = useState(false);
@@ -74,10 +70,6 @@ const Employee_Cards = (type) => {
     fetchEmployees(currentPage, limit);
   };
 
-  //Сортировка по данным в Redux
-  // const handleSortByChange = (event) => {
-  //   dispatch(setSortBy(event.target.value));
-  // };
 
   const handleSortByChange = (event) => {
     const newSortBy = event.target.value;
@@ -107,37 +99,35 @@ const Employee_Cards = (type) => {
   }
 
   const goToAddVacation = (item) => {
-    navigate(`/addInf/vacation/${item.id}`, {state: item});
+    navigate(`/addInf/vacation/${item.id}`, { state: item });
   }
 
   const goToAddSickLeave = (item) => {
-    navigate(`/addInf/sickLeave/${item.id}`, {state: item});
+    navigate(`/addInf/sickLeave/${item.id}`, { state: item });
   }
 
   const goToAddDayOff = (item) => {
-    navigate(`/addInf/dayOff/${item.id}`, {state: item});
+    navigate(`/addInf/dayOff/${item.id}`, { state: item });
+  }
+
+  const goBack = () => {
+    navigate('/personnelDepartment')
   }
 
   const handleEdit = (item) => {
     navigate(`/editEmployee/${item.id}`, { state: item });
   };
 
-  const handleModalOpen = (item, type) => {
-    setOpen(true);
+  const handleOpen = (type, item) => {
     setChoice(type);
     setchoosenEmployee(item);
+    setOpen(true);
   };
 
-  const handleModalClose = () => {
-    setOpen(false);
+  const handleClose = () => {
     setChoice(null);
     setchoosenEmployee(null);
-  };
-
-  const handleModalConfirm = () => {
-    if (choosenEmployee) {
-      handleModalClose();
-    }
+    setOpen(false);
   };
 
   if (loading) return <p>Загрузка...</p>;
@@ -147,7 +137,13 @@ const Employee_Cards = (type) => {
     <>
       <Paper
         component="form"
-        sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400, margin: "50px auto" }}
+        sx={{
+          p: '2px 4px',
+          display: 'flex',
+          alignItems: 'center',
+          width: { xs: '90%', sm: 400 }, // xs для маленьких экранов, sm для средних
+          margin: { xs: '50px auto', sm: '50px auto' }, // аналогично для margin
+        }}
       >
         <InputBase
           sx={{ ml: 1, flex: 1 }}
@@ -183,51 +179,66 @@ const Employee_Cards = (type) => {
         <div className='field_with_card_and_numeration'>
           <div className="cards">
             {part_employees.map(item => (
-              <Card key={item.id} sx={{ width: 345, textAlign: "center" }}>
+              <Card key={item.id} sx={{ 
+                width: 345, 
+                textAlign: "center" ,
+                width: { xs: '200px', sm: '320px' },
+                }}>
                 <CardHeader
                   title={item.fullname}
                 />
-                <Link to={`/detailedInfo/${item.id}`} style={{ display: 'block' }}> {/* Добавлено overflow: hidden */}
-                  <CardMedia
-                    component="img"
-                    height="300"
-                    image={item.imageUrl ? `${hostServer}${item.imageUrl}` : noPhoto}
-                    alt="employee"
-                    sx={{
-                      '&:hover': {
-                        transform: 'scale(1.1)',
-                        transition: 'transform 0.3s ease', /* Добавлено для плавной анимации */
-                      }
-                    }
-                    }
-                  />
-                </Link>
+                {((currentRole === MANAGERROLE || currentRole === INSPECTORROLE) && type !== 'document') && (
+                  <>
+                    <Link to={`/detailedInfo/${item.id}`} style={{ display: 'block' }}>
+                      <CardMedia
+                        component="img"
+                        height="300"
+                        image={item.imageUrl ? `${hostServer}${item.imageUrl}` : noPhoto}
+                        alt="employee"
+                        sx={{
+                          '&:hover': {
+                            transform: 'scale(1.1)',
+                            transition: 'transform 0.3s ease',
+                          }
+                        }
+                        }
+                      />
+                    </Link>
+                  </>
+                )}
+                {(currentRole === MANAGERROLE && type === 'document') && (
+                  <>
+                    <CardMedia
+                      component="img"
+                      height="300"
+                      image={item.imageUrl ? `${hostServer}${item.imageUrl}` : noPhoto}
+                      alt="employee"
+                    />
+                  </>
+                )}
                 <CardContent>
                   <Typography variant="h5" sx={{ color: 'text.secondary' }}>
                     {item.position}
                   </Typography>
                 </CardContent>
-                <CardActions sx={{ justifyContent: "center" }}>
+                <CardActions sx={{ justifyContent: "center", flexDirection: {xs: 'column', sm: 'row'}, gap: {xs: '10px', sm: 'none'} }}>
                   {(currentRole === MANAGERROLE && type !== 'document') && (
                     <>
                       <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => handleEdit(item)}>
                         Редактировать
                       </Button>
-                      {/* <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => handleDeleteOpen(item)}>
-                        Удалить
-                      </Button> */}
                     </>
                   )}
-                  {/* {(currentRole === MANAGERROLE && type === 'document') && (
+                  {(currentRole === MANAGERROLE && type === 'document') && (
                     <>
-                      <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => handleEdit(item)}>
+                      <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => handleOpen('dismissal', item)}>
                         Увольнение
                       </Button>
-                      <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => handleDeleteOpen(item)}>
+                      <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => handleOpen('vacation', item)}>
                         Отпуск
                       </Button>
                     </>
-                  )} */}
+                  )}
                   {currentRole === INSPECTORROLE && (
                     <>
                       <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => goToAddVacation(item)}>
@@ -246,32 +257,19 @@ const Employee_Cards = (type) => {
             ))}
           </div>
           <Numeration totalPages={totalPages} currentPage={currentPage} handlePageChange={handlePageChange} />
-          {currentRole === MANAGERROLE && (
+          {(currentRole === MANAGERROLE && type !== 'document') && (
             <Button onClick={goToAddEmployee} color='primary.contrastText' sx={{ marginBottom: "50px" }}>
               Добавить работника
             </Button>
           )}
-          {/* <Dialog open={open} onClose={handleDeleteClose}>
-            <DialogTitle>Подтверждение удаления</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Вы уверены, что хотите удалить покупателя? Это действие необратимо, и приведет к удалению контрактов, связанных с покупателем и продаж, которые были связаны с контрактами
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleDeleteClose} color='primary.contrastText'>Отмена</Button>
-              <Button onClick={handleDeleteConfirm} color="error">Удалить</Button>
-            </DialogActions>
-          </Dialog> */}
-          {/* <Dialog open={open} onClose={handleModalClose}>
-            <DialogTitle>Введите данные</DialogTitle>
-            <DialogActions>
-              <Button onClick={goToAdd} color='primary.contrastText'>Добавить</Button>
-              <Button onClick={handleDeleteConfirm} color="error">Редактировать</Button>
-            </DialogActions>
-          </Dialog> */}
+          {type === 'document' && (
+            <Button onClick={goBack} color='primary.contrastText' sx={{ marginBottom: "20px" }}>
+              Назад
+            </Button>
+          )}
         </div>
       </div>
+      <Modal open={open} handleClose={handleClose} type={choice} item={choosenEmployee} /> {/* Передайте сюда необходимый тип */}
     </>
   );
 };

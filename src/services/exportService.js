@@ -65,6 +65,48 @@ class exportService {
         }
     }
 
+    async exportWordDismissal(data) {
+        try {
+            const response = await axios.post(`${hostServer}word/generate_dismissal`, data, {
+                responseType: 'blob',
+            });
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                throw new Error(`Ошибка при экспорте документа на увольнение в Word: ${response.data.message || 'Неизвестная ошибка'}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Ошибка при экспорте документа на увольнение в Word: ${error}`);
+            }
+        }
+    }
+
+    async exportWordVacation(data) {
+        try {
+            const response = await axios.post(`${hostServer}word/generate_vacation`, data, {
+                responseType: 'blob',
+            });
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                throw new Error(`Ошибка при экспорте документа на отпуск в Word: ${response.data.message || 'Неизвестная ошибка'}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                throw error.response.data;
+            } else if (error.request) {
+                throw new Error('Ошибка сети');
+            } else {
+                throw new Error(`Ошибка при экспорте документа на отпуск в Word: ${error}`);
+            }
+        }
+    }
+
 }
 
 export default new exportService();

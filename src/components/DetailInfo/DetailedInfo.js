@@ -33,7 +33,7 @@ const DetailedInfo = () => {
     const navigate = useNavigate()
 
     const goBack = () => {
-        navigate("/manager");
+        navigate("/personnelDepartment");
     }
 
     const handleEventsChange = () => {
@@ -55,14 +55,24 @@ const DetailedInfo = () => {
     return (
         <>
             <Box sx={{
-                maxWidth: "700px",
-                maxHeight: "400px",
+                maxWidth: {
+                    xs: '300px',
+                    sm: '700px',
+                },
+                maxHeight: {
+                    xs: '500px',
+                    sm: '400px',
+                },
                 // backgroundColor: "gray",
                 display: "flex",
+                flexDirection: {xs: 'column', sm: 'row'},
                 justifyContent: "center",
                 alignItems: "center",
                 margin: "30px auto",
-                gap: "30px",
+                gap: {
+                    xs: '0',
+                    sm: '30px',
+                },
                 boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.4)",
             }}>
                 <Box sx={{
@@ -80,27 +90,62 @@ const DetailedInfo = () => {
                     />
                 </Box>
                 <Box sx={{
-                    //boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.4)",
+                    marginLeft: '10px'
                 }}>
-                    <Typography variant="h6" sx={{ color: 'text.primary' }}>
+                    <Typography variant="h6" sx={{
+                        color: 'text.primary', fontSize: {
+                            xs: '1rem',
+                            sm: '1.25rem',
+                        }
+                    }}>
                         ФИО: {employee.fullname}
                     </Typography>
-                    <Typography variant="h6" sx={{ color: 'text.primary' }}>
+                    <Typography variant="h6" sx={{
+                        color: 'text.primary', fontSize: {
+                            xs: '1rem',
+                            sm: '1.25rem',
+                        }
+                    }}>
                         Дата рождения: {employee.birth_date}
                     </Typography>
-                    <Typography variant="h6" sx={{ color: 'text.primary' }}>
+                    <Typography variant="h6" sx={{
+                        color: 'text.primary', fontSize: {
+                            xs: '1rem',
+                            sm: '1.25rem',
+                        }
+                    }}>
                         Должность: {employee.position}
                     </Typography>
-                    <Typography variant="h6" sx={{ color: 'text.primary' }}>
+                    <Typography variant="h6" sx={{
+                        color: 'text.primary', fontSize: {
+                            xs: '1rem',
+                            sm: '1.25rem',
+                        }
+                    }}>
                         Дата трудоустройства: {employee.start_date}
                     </Typography>
-                    <Typography variant="h6" sx={{ color: 'text.primary' }}>
+                    <Typography variant="h6" sx={{
+                        color: 'text.primary', fontSize: {
+                            xs: '1rem',
+                            sm: '1.25rem',
+                        }
+                    }}>
                         Телефон: {employee.phone_number}
                     </Typography>
-                    <Typography variant="h6" sx={{ color: 'text.primary' }}>
+                    <Typography variant="h6" sx={{
+                        color: 'text.primary', fontSize: {
+                            xs: '1rem',
+                            sm: '1.25rem',
+                        }
+                    }}>
                         Email: {employee.email || 'отсутствует'}
                     </Typography>
-                    <Typography variant="h6" sx={{ color: 'text.primary' }}>
+                    <Typography variant="h6" sx={{
+                        color: 'text.primary', fontSize: {
+                            xs: '1rem',
+                            sm: '1.25rem',
+                        }
+                    }}>
                         Адрес проживания: {employee.address}
                     </Typography>
                 </Box>
@@ -114,7 +159,7 @@ const DetailedInfo = () => {
             }}>
                 <Box sx={{
                     textAlign: 'center',
-                    maxWidth: '750px',
+                    width: '100%',
                     marginBottom: "40px"
                 }}>
                     <Typography variant='h4' sx={{ marginBottom: '20px' }}>Отпуска</Typography>
@@ -122,15 +167,15 @@ const DetailedInfo = () => {
                 </Box>
                 <Box sx={{
                     textAlign: 'center',
-                    maxWidth: '750px',
+                    width: '100%',
                     marginBottom: "40px"
                 }}>
                     <Typography variant='h4' sx={{ textAlign: 'center', marginBottom: '20px' }}>Больничные</Typography>
-                    <TableForEmployee type={'sickLeave'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdSickLeaves} onEventsChange={handleEventsChange}/>
+                    <TableForEmployee type={'sickLeave'} employee_id={employee.id} getPartSearch={getPartSearchByEmployeeIdSickLeaves} onEventsChange={handleEventsChange} />
                 </Box>
                 <Box sx={{
                     textAlign: 'center',
-                    maxWidth: '750px',
+                    width: '100%',
                     marginBottom: "40px"
                 }}>
                     <Typography variant='h4' sx={{ textAlign: 'center', marginBottom: '20px' }}>Прогулы</Typography>

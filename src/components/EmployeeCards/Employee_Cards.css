@@ -3,11 +3,11 @@
     row-gap: 10px;
     margin: 60px;
     justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .cards {
     display: flex;
-    max-width: 23em;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
@@ -30,4 +30,23 @@
     margin-top: 6em;
     display: flex;
     flex-direction: column;
+}
+
+@media (max-width: 500px) {
+
+    .cards{
+        max-width: 300px
+    }
+
+    .field_with_card_and_numeration{
+        max-width: 400px;
+    }
+
+    .menu{
+        display: none;
+    }
+    
+    .hidden_menu{
+        display: block;
+    }
 }

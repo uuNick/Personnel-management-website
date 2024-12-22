@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
 import YupPassword from 'yup-password';
 import { useNavigate } from 'react-router-dom';
 import { registration } from '../../services/authService';
@@ -58,13 +57,10 @@ const Registration = () => {
         validationSchema: validationSchema,
         onSubmit: async (values, { resetForm }) => {
             try {
-                const response = await registration(values);
-                console.log(response);
+                await registration(values);
                 setUsernameError('');
                 setEmailError('');
-                localStorage.setItem('roleNames', response.roleNames);
-                localStorage.setItem('token', response.token);
-                navigate('/manager');
+                navigate('/personnelDepartment');
                 resetForm();
             } catch (e) {
                 if (e.message.includes("уже существует")) {
@@ -117,6 +113,14 @@ const Registration = () => {
                     onChange={handleEmailChange}
                     error={formik.touched.email && Boolean(formik.errors.email)}
                     helperText={formik.touched.email && formik.errors.email}
+                    InputLabelProps={{
+                        sx: {
+                            fontSize: {
+                                xs: '0.8rem', // Для экранов меньше 600px
+                                sm: '1rem', // Для экранов от 600px до 900px
+                            },
+                        },
+                    }}
                 />
                 {emailError && (
                     <FormHelperText error sx={{ color: 'red', margin: "0", textAlign: "center" }}>
@@ -133,6 +137,14 @@ const Registration = () => {
                     onChange={handleUserNameChange}
                     error={formik.touched.username && Boolean(formik.errors.username)}
                     helperText={formik.touched.username && formik.errors.username}
+                    InputLabelProps={{
+                        sx: {
+                            fontSize: {
+                                xs: '0.8rem', // Для экранов меньше 600px
+                                sm: '1rem', // Для экранов от 600px до 900px
+                            },
+                        },
+                    }}
                 />
                 {usernameError && (
                     <FormHelperText error sx={{ color: 'red', margin: "0", textAlign: "center" }}>
@@ -164,6 +176,14 @@ const Registration = () => {
                             </InputAdornment>
                         )
                     }}
+                    InputLabelProps={{
+                        sx: {
+                            fontSize: {
+                                xs: '0.8rem', // Для экранов меньше 600px
+                                sm: '1rem', // Для экранов от 600px до 900px
+                            },
+                        },
+                    }}
                 />
                 <TextField
                     fullWidth
@@ -190,6 +210,14 @@ const Registration = () => {
                             </InputAdornment>
                         )
                     }}
+                    InputLabelProps={{
+                        sx: {
+                            fontSize: {
+                                xs: '0.8rem', // Для экранов меньше 600px
+                                sm: '1rem', // Для экранов от 600px до 900px
+                            },
+                        },
+                    }}
                 />
                 <Button
                     type="submit"
@@ -197,9 +225,8 @@ const Registration = () => {
                     color="primary.contrastText"
                     sx={{ marginTop: "10px", marginBottom: "20px" }}
                 >
-                    Зарегистрироваться
+                    Зарегистрировать
                 </Button>
-                <Typography>Уже есть аккаунт?<Link to="/login">Войти</Link></Typography>
             </Box>
         </div>
     );

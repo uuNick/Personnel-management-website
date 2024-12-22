@@ -12,7 +12,8 @@ import {
     Box,
     FormHelperText,
     Alert,
-    Snackbar
+    Snackbar,
+    useMediaQuery 
 } from '@mui/material';
 
 import "./Auth.css";
@@ -79,8 +80,10 @@ const Registration = () => {
 
     const handleEmailChange = (event) => {
         formik.handleChange(event);
-        setEmailError(''); 
+        setEmailError('');
     };
+
+    const isSmallScreen = useMediaQuery('(max-width:600px)');
 
     return (
         <div className='all_device_div'>
@@ -104,7 +107,7 @@ const Registration = () => {
                     margin="normal"
                     id="email"
                     name="email"
-                    label="Адрес электронной почты"
+                    label={isSmallScreen ? 'Email' : 'Адрес электронной почты'} // Условная логика для метки
                     value={formik.values.email}
                     onChange={handleEmailChange}
                     error={formik.touched.email && Boolean(formik.errors.email)}

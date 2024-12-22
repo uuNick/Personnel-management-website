@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from "../../services/authService";
@@ -38,6 +38,11 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
+    useEffect(() => {
+
+        localStorage.clear();
+    }, []);
+
     const formik = useFormik({
         initialValues: {
             username: '',
@@ -47,15 +52,14 @@ const Login = () => {
         onSubmit: async (values, { resetForm }) => {
             try {
                 const response = await login(values.username, values.password);
-                console.log(response);
                 setUsernameError('');
                 localStorage.setItem('roleNames', response.roleNames);
                 localStorage.setItem('token', response.token);
-                
-                if(response.roleNames.includes(INSPECTORROLE)){
+
+                if (response.roleNames.includes(INSPECTORROLE)) {
                     navigate('/personnelDepartment')
                 }
-                else{
+                else {
                     navigate('/personnelDepartment');
                 }
                 resetForm();
@@ -71,7 +75,7 @@ const Login = () => {
     });
 
     const handleUsernamePasswordChange = (event) => {
-        formik.handleChange(event); 
+        formik.handleChange(event);
         setUsernameError('')
     };
 
@@ -102,6 +106,14 @@ const Login = () => {
                     onChange={handleUsernamePasswordChange}
                     error={formik.touched.username && Boolean(formik.errors.username)}
                     helperText={formik.touched.username && formik.errors.username}
+                    InputLabelProps={{
+                        sx: {
+                            fontSize: {
+                                xs: '0.75rem', // Для экранов меньше 600px
+                                sm: '1rem', // Для экранов от 600px до 900px
+                            },
+                        },
+                    }}
                 />
                 <TextField
                     fullWidth
@@ -128,13 +140,21 @@ const Login = () => {
                             </InputAdornment>
                         )
                     }}
+                    InputLabelProps={{
+                        sx: {
+                            fontSize: {
+                                xs: '0.75rem', // Для экранов меньше 600px
+                                sm: '1rem', // Для экранов от 600px до 900px
+                            },
+                        },
+                    }}
                 />
                 {usernameError && (
                     <FormHelperText error sx={{ color: 'red', margin: "0", textAlign: "start" }}>
                         {usernameError}
                     </FormHelperText>
                 )}
-                <Typography><Link to="/reset" style={{ display: "block", textAlign: "end" }}>Забыли пароль</Link></Typography>
+                <Typography sx={{ textAlign: { xs: 'center', sm: 'end', md: 'end' }, }}><Link to="/reset">Забыли пароль</Link></Typography>
                 <Button
                     type="submit"
                     variant="outlined"

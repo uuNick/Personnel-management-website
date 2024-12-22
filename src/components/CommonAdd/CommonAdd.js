@@ -147,7 +147,7 @@ const CommonAdd = ({ action_type }) => {
     const navigate = useNavigate();
 
     const goBack = () => {
-        navigate('/manager');
+        navigate('/personnelDepartment');
     }
 
     const handleImageChange = (event) => {

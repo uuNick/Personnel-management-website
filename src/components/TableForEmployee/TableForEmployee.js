@@ -267,10 +267,10 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, onEventsChange }) 
             {
                 common_part.length > 0 ? (
                     <Box>
-                        <Box>
-                            <TableContainer component={Paper}>
+                        <Box sx = {{minWidth: "200px"}}>
+                            <TableContainer component={Paper} sx={{ maxWidth: '100%', overflowX: 'auto' }}>
                                 <Table sx={{
-                                    minWidth: 750
+                                    minWidth: '650px'
                                 }} aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
@@ -353,7 +353,7 @@ const TableForEmployee = ({ type, employee_id, getPartSearch, onEventsChange }) 
                 )
             }
             <Dialog open={open} onClose={handleModalClose}>
-                <DialogTitle>Подтверждение выхода</DialogTitle>
+                <DialogTitle>Подтверждение удаления</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Вы уверены, что хотите удалить {mapping[type]}?

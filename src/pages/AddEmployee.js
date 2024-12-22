@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
 import EmployeeService from '../services/employeeService';
+import DataChangeService from '../services/dataChangeService';
 import {
     TextField,
     Button,
@@ -102,6 +103,7 @@ const AddEmployee = () => {
                 }
                 await EmployeeService.createEmployee(formData);
                 handleCreatEmployeeSuccess("Работник успешно добавлен");
+
                 resetForm();
                 setImage(null);
                 setImageError(null);
@@ -115,7 +117,7 @@ const AddEmployee = () => {
     const navigate = useNavigate();
 
     const goBack = () => {
-        navigate('/manager');
+        navigate('/personnelDepartment');
     }
 
     const handleImageChange = (event) => {

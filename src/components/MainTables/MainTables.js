@@ -341,7 +341,7 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
                             error={endDateError}
                             helperText={endDateError ? 'Формат даты YYYY-MM-DD' : ''}
                         />
-                        <Box sx={{ display: "flex", gap: "10px" }}>
+                        <Box sx={{ display: "flex", gap: "10px", marginBottom: '10px' }}>
                             <Button color='primary.contrastText' onClick={handleSubmit}>
                                 Найти
                             </Button>
@@ -352,11 +352,12 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
                     </Box>
                 </Box>
                 <Box sx={{
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    minWidth: '200px'
                 }}>
-                    <TableContainer component={Paper}>
+                    <TableContainer component={Paper} sx={{ maxWidth: '100%', overflowX: 'auto' }}>
                         <Table sx={{
-                            minWidth: 650
+                            minWidth: '650px'
                         }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
@@ -437,11 +438,11 @@ const MainTables = ({ type, getPartOfData, getPartSortedData, getPartSearchByDat
                         page={currentPage - 1}
                         onPageChange={handleChangePage}
                     />
-                    <Box>
+                    <Box sx = {{display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap'}}>
                         <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => exportExcel()}>Excel</Button>
                         <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px', margin: "0 20px" }} onClick={() => exportPdf()}>PDF</Button>
                         <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => exportWord()}>Word</Button>
-                        <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px', margin: "0 20px" }} onClick={() => goBack()}>Назад</Button>
+                        <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px', margin: "10px 20px" }} onClick={() => goBack()}>Назад</Button>
                     </Box>
                 </Box>
             </Box>

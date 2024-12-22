@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Logo from '../../images/logo/logo.png';
 import './Main_Header.css';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Menu, MenuItem } from '@mui/material';
 const MANAGERROLE = 'РУКОВОДИТЕЛЬ';
 const INSPECTORROLE = 'ИНСПЕКТОР';
 
@@ -41,6 +41,15 @@ const Main_Header = () => {
         }
     };
 
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const isOpen = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <header>
             <div className="header_wrapper ">
@@ -75,12 +84,50 @@ const Main_Header = () => {
                                 <li className="menu_item">
                                     <Link to="/dataChanges" className="menu_link">Изменение данных</Link>
                                 </li>
+                                <li className="menu_item">
+                                    <Link to="/registration" className="menu_link">Зарегистрировать</Link>
+                                </li>
                             </ul>
                         )}
                     </nav>
                     <div className="header_buttons">
                         <Button variant="outlined" color='primary.contrastText' onClick={handleModalOpen}>Выйти</Button>
                     </div>
+                </div>
+                <div className='hidden_menu'>
+                    <Button
+                        onClick={handleClick}
+                        variant='outlined'
+                        color='primary.contrastText'
+                        sx={{
+                            border: 'none',
+                            padding: '0'
+                        }}
+                    >
+                        Ссылки
+                    </Button>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={isOpen}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        {userRole === MANAGERROLE && [
+                            <MenuItem key="documents"><Link to="/documents" className="menu_link">Документы</Link></MenuItem>,
+                            <MenuItem key="dataChanges"><Link to="/dataChanges" className="menu_link">Изменение данных</Link></MenuItem>,
+                            <MenuItem key="registration"><Link to="/registration" className="menu_link">Зарегистрировать</Link></MenuItem>,
+                            <MenuItem key="log_out" onClick={handleModalOpen}>Выйти</MenuItem>,
+                        ]}
+                        {userRole === INSPECTORROLE && [
+                            <MenuItem key="vacations"><Link to="/vacations" className="menu_link">Отпуска</Link></MenuItem>,
+                            <MenuItem key="sickLeaves"><Link to="/sickLeaves" className="menu_link">Больничные</Link></MenuItem>,
+                            <MenuItem key="daysOff"><Link to="/daysOff" className="menu_link">Прогулы</Link></MenuItem>,
+                            <MenuItem key="log_out" onClick={handleModalOpen}>Выйти</MenuItem>,
+                        ]}
+                    </Menu>
                 </div>
             </div>
             <Dialog open={open} onClose={handleModalClose}>

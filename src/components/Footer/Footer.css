@@ -64,4 +64,10 @@
     .footer .row a i {
         margin: 0% 3%;
     }
+
+    .footer .row {
+        gap: 10px;
+        flex-direction: column;
+        text-align: center;
+    }
 }

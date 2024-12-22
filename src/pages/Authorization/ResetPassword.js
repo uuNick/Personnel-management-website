@@ -12,7 +12,7 @@ import {
     Box,
     InputAdornment,
     FormHelperText,
-    Alert,
+    useMediaQuery
 } from '@mui/material';
 
 import IconButton from '@mui/material/IconButton';
@@ -77,6 +77,8 @@ const Registration = () => {
         setError(''); 
     };
 
+    const isSmallScreen = useMediaQuery('(max-width:500px)');
+
     return (
         <div className='all_device_div'>
             <Box component="form" onSubmit={formik.handleSubmit} noValidate
@@ -119,11 +121,19 @@ const Registration = () => {
                             </InputAdornment>
                         )
                     }}
+                    InputLabelProps={{
+                        sx: {
+                            fontSize: {
+                                xs: '0.8rem', // Для экранов меньше 600px
+                                sm: '1rem', // Для экранов от 600px до 900px
+                            },
+                        },
+                    }}
                 />
                 <TextField
                     fullWidth
                     margin="normal"
-                    label='Повторите пароль'
+                    label={isSmallScreen ? 'Пароль' : 'Повторите пароль'} // Условная логика для метки
                     name="repeat_password"
                     id="repeat_password"
                     type={showPassword_2 ? "text" : "password"}
@@ -144,6 +154,14 @@ const Registration = () => {
                                 </IconButton>
                             </InputAdornment>
                         )
+                    }}
+                    InputLabelProps={{
+                        sx: {
+                            fontSize: {
+                                xs: '0.8rem', // Для экранов меньше 600px
+                                sm: '1rem', // Для экранов от 600px до 900px
+                            },
+                        },
                     }}
                 />
                 {error && (
