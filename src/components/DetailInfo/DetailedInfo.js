@@ -156,6 +156,8 @@ const DetailedInfo = () => {
                 alignItems: 'center',
                 flexDirection: 'column',
                 flexWrap: 'wrap',
+                maxWidth: '1000px',
+                margin: '0 auto'
             }}>
                 <Box sx={{
                     textAlign: 'center',
