@@ -21,7 +21,9 @@ import {
   Radio,
   Paper,
   InputBase,
-  Divider
+  Divider,
+  CircularProgress,
+  Box
 } from '@mui/material';
 import noPhoto from '../../images/no_photo.jpg';
 import Modal from '../MyModal/MyModal';
@@ -130,7 +132,9 @@ const Employee_Cards = ({ type }) => {
     setOpen(false);
   };
 
-  if (loading) return <p>Загрузка...</p>;
+  if (loading) {
+    return <Box display="flex" justifyContent="center" alignItems="center" height="100vh"><CircularProgress /></Box>; // Индикатор загрузки
+  }
   if (error) return <p>Ошибка: {error}</p>;
 
   return (
@@ -179,11 +183,11 @@ const Employee_Cards = ({ type }) => {
         <div className='field_with_card_and_numeration'>
           <div className="cards">
             {part_employees.map(item => (
-              <Card key={item.id} sx={{ 
-                width: 345, 
-                textAlign: "center" ,
+              <Card key={item.id} sx={{
+                width: 345,
+                textAlign: "center",
                 width: { xs: '200px', sm: '320px' },
-                }}>
+              }}>
                 <CardHeader
                   title={item.fullname}
                 />
@@ -221,7 +225,7 @@ const Employee_Cards = ({ type }) => {
                     {item.position}
                   </Typography>
                 </CardContent>
-                <CardActions sx={{ justifyContent: "center", flexDirection: {xs: 'column', sm: 'row'}, gap: {xs: '10px', sm: 'none'} }}>
+                <CardActions sx={{ justifyContent: "center", flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: '10px', sm: 'none' } }}>
                   {(currentRole === MANAGERROLE && type !== 'document') && (
                     <>
                       <Button size="small" color='primary.contrastText' sx={{ fontSize: '14px' }} onClick={() => handleEdit(item)}>
