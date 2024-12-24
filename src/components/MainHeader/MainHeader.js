@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Logo from '../../images/logo/logo.png';
-import './Main_Header.css';
+import './MainHeader.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Menu, MenuItem } from '@mui/material';
 const MANAGERROLE = 'РУКОВОДИТЕЛЬ';

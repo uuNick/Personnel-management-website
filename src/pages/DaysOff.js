@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from "../components/Main_Header/Main_Header";
+import Header from "../components/MainHeader/MainHeader";
 import DayOffMain from '../components/DayOffMain/DayOffMain';
 
 
